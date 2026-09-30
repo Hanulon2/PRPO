@@ -1,0 +1,41 @@
+#!/bin/sh
+# Pre-commit hook pro projekt Ordinace Na Vyhlídce (PPRO)
+# Účel: Ujistit se, že před commitem byla zkontrolována a aktualizována technická dokumentace (README.md)
+
+echo "== [Git Hook] Kontrola před commitem =="
+
+# Zjištění, zda jsou ve staged souborech změny
+STAGED_FILES=$(git diff --cached --name-only)
+
+if [ -z "$STAGED_FILES" ]; then
+    echo "CHYBA: Žádné soubory nejsou připraveny ke commitu (staged)."
+    exit 1
+fi
+
+echo "Připravené soubory ke commitu:"
+echo "$STAGED_FILES"
+
+# Kontrola, zda staged soubory obsahují kód nebo konfiguraci, ale neobsahují README.md
+HAS_CODE_CHANGES=false
+HAS_DOCS_CHANGES=false
+
+for file in $STAGED_FILES; do
+    if [ "$file" = "README.md" ]; then
+        HAS_DOCS_CHANGES=true
+    fi
+    case "$file" in
+        *.java|*.sql|*.xml|*.yml|*.yaml|Dockerfile|docker-compose*)
+            HAS_CODE_CHANGES=true
+            ;;
+    esac
+done
+
+if [ "$HAS_CODE_CHANGES" = true ] && [ "$HAS_DOCS_CHANGES" = false ]; then
+    echo "----------------------------------------------------------------------"
+    echo "UPOZORNĚNÍ: Byly detekovány změny v kódu/konfiguraci, ale README.md nebyl upraven."
+    echo "Ujistěte se, že technická dokumentace a seznam rozhodnutí v README.md jsou aktuální!"
+    echo "----------------------------------------------------------------------"
+fi
+
+echo "Kontrola před commitem úspěšně proběhla."
+exit 0

@@ -1,0 +1,19 @@
+#!/bin/sh
+# Pre-push hook pro projekt Ordinace Na Vyhlídce (PPRO)
+# Účel: Zamezit svévolnému automatickému pushi bez explicitního povelu uživatele
+
+echo "== [Git Hook] Kontrola push operace =="
+
+if [ "$PUSH_ALLOWED" != "1" ] && [ "$EXPLICIT_PUSH" != "1" ]; then
+    echo "======================================================================"
+    echo "BLOKOVÁNO: Push operace vyžaduje explicitní schválení uživatele!"
+    echo "Pravidlo z AGENTS.md: Push smí být spuštěn pouze na přímý pokyn."
+    echo "Pro povolení push spusťte v terminálu např.:"
+    echo "  \$env:PUSH_ALLOWED='1'; git push; Remove-Item Env:\PUSH_ALLOWED"
+    echo "  nebo v bashi: PUSH_ALLOWED=1 git push"
+    echo "======================================================================"
+    exit 1
+fi
+
+echo "Explicitní povolení ověřeno. Push povolen."
+exit 0
