@@ -133,7 +133,24 @@ Projekt je realizován v souladu s formálními požadavky předmětu PPRO:
 +-----------------------------------------------------------------+
 ```
 
-### 4.2 Doménový a datový model (Entity a vazby)
+### 4.2 Zvolený technologický stack
+Na základě architektonických požadavků klienta i formálního minima předmětu PPRO byl definován následující technologický stack:
+
+| Komponenta / Vrstva | Technologie | Verze | Odůvodnění a účel |
+|---|---|---|---|
+| **Programovací jazyk** | **Java** | **21 LTS** | Stabilní podniková platforma, podpora virtuálních vláken a recordů. |
+| **Aplikační framework** | **Spring Boot** | **3.4.x** | Průmyslový standard pro třívrstvou architekturu s dependency injection. |
+| **Prezentační vrstva** | **Spring MVC + Thymeleaf** | 3.x | Rychlé server-side vykreslování s nulovou režií pro recepční paní Věru. |
+| **Styling & Ergonomie** | **Vanilla CSS** | Moderní CSS3 | Vysoký kontrast, přehledné prvky bez zdržujících animací pro rychlou odezvu. |
+| **Validace vstupů** | **Jakarta Bean Validation** | 3.x | Deklarativní kontrola povinných údajů, formátu telefonů a rodných čísel. |
+| **Objektově-relační mapování** | **Spring Data JPA / Hibernate** | 6.x | Správa entit, repository pattern, optimalizace SQL dotazů a indexů. |
+| **Databázový engine** | **PostgreSQL** | **16 Alpine** | Robustní relační databáze provozovaná v izolovaném Docker kontejneru. |
+| **Řízení migrací schématu** | **Flyway** | 10.x | Verzované SQL migrace pro čisté DDL a bezpečné nasazení bez ručních zásahů. |
+| **Sestavení a správa závislostí**| **Maven (přes `mvnw`)** | 3.9+ | Přenositelné a reprodukovatelné sestavení projektu bez nutnosti instalace Mavenu. |
+| **Kontejnerizace & Orchestrace** | **Docker & Docker Compose** | 28+ / Compose v2 | Povinné minimum PPRO: spuštění kompletního řešení příkazem `docker compose up`. |
+| **Testovací frameworky** | **JUnit 5, Mockito, AssertJ** | 5.x | Unit testy doménové logiky a integrační testy databázových operací. |
+
+### 4.3 Doménový a datový model (Entity a vazby)
 Minimální počet entit v projektu je 7 (požadováno minimálně 5) a model obsahuje vazbu M:N s atributem:
 
 1. **`Patient` (Pacient):**
@@ -152,7 +169,7 @@ Minimální počet entit v projektu je 7 (požadováno minimálně 5) a model ob
 7. **`DoctorAbsence` (Nepřítomnost lékaře):**
    - Atributy: `id`, `doctor_id` (FK), `start_date`, `end_date`, `reason`.
 
-### 4.3 Relační databáze a migrace
+### 4.4 Relační databáze a migrace
 - **Databáze:** PostgreSQL v Docker kontejneru.
 - **Migrační nástroj:** Flyway.
 - **Syntetická data:** Žádná reálná osobní data ani hesla. Součástí je seed migrace s fiktivními lékaři, pacienty a VZP číselníkem.
@@ -186,9 +203,9 @@ Ověření funkčnosti obchodních pravidel a detekce kolizí:
 | Fáze | Popis úkolu | Stav |
 |---|---|---|
 | **Fáze 1** | Analýza Zadání A, vytvoření `AGENTS.md`, pre-commit hooku a kompletního `README.md` jako jediného zdroje pravdy. | Hotovo |
-| **Fáze 2** | Příprava kostry projektu (Spring Boot 3, Java 21, Maven/Gradle, Dockerfile, docker-compose.yml). | Plánováno |
-| **Fáze 3** | Definice Flyway migrací, DDL schématu, syntetických seed dat a JPA entit (včetně M:N vazby). | Plánováno |
-| **Fáze 4** | Implementace servisní vrstvy: algoritmus volných termínů, detekce překryvů, validace ordinačních hodin a stavový automat. | Plánováno |
-| **Fáze 5** | Implementace REST API / UI pro recepční paní Věru (vyhledávání, diář, měsíční výkaz pojišťovny, fronta přeplánování). | Plánováno |
-| **Fáze 6** | Unit a integrační testy pro ověření povinného minima a hraničních stavů. | Plánováno |
-| **Fáze 7** | Závěrečná validace, dokumentační prověrka k obhajobě. | Plánováno |
+| **Fáze 2** | **Demo prototyp – Evidence pacientů:** Inicializace Spring Boot 3 projektu (Java 21, Maven wrapper), Docker Compose s PostgreSQL, Flyway migrace entity `Patient`, servisní logika, rychlé vyhledávání pro paní Věru a prevence duplicit. | Probíhá (v plánování) |
+| **Fáze 3** | Rozšíření datového modelu o zbývající doménové entity (`Doctor`, `DoctorWorkingHours`, `Appointment`, `MedicalService`, `AppointmentServiceItem`, `DoctorAbsence`) a M:N vazbu. | Plánováno |
+| **Fáze 4** | Implementace kalendářové a rezervační logiky: algoritmus vyhledání volných slotů, detekce překryvů a validace ordinačních hodin. | Plánováno |
+| **Fáze 5** | Implementace modulu výkonů a výkaznictví pro pojišťovnu + správa nepřítomnosti lékaře (fronta pacientů k obvolání). | Plánováno |
+| **Fáze 6** | Komplexní unit a integrační testy pro ověření povinného minima a hraničních stavů. | Plánováno |
+| **Fáze 7** | Závěrečná validace, multi-stage Docker build a příprava dokumentace k obhajobě. | Plánováno |
