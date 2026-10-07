@@ -137,7 +137,7 @@ Tato sekce detailně rozebírá klíčové body ze zadání, kde se láme návrh
 | **Objektově-relační mapování** | **Spring Data JPA / Hibernate** | 6.x | Správa entit, repository pattern, optimalizace SQL dotazů a indexů. |
 | **Databázový engine** | **PostgreSQL** | **16 Alpine** | Relační databáze s plnou ACID podporou v izolovaném Docker kontejneru. |
 | **Řízení migrací schématu** | **Flyway** | 10.x | Verzované SQL migrace pro čisté DDL a bezpečné nasazení bez ručních zásahů. |
-| **Sestavení a správa závislostí**| **Maven (přes `mvnw`)** | 3.9+ | Přenositelné sestavení projektu bez nutnosti lokální instalace Mavenu. |
+| **Sestavení a správa závislostí**| **Gradle (přes `gradlew`)** | 9.7+ | Přenositelné sestavení projektu přes wrapper bez nutnosti lokální instalace. |
 | **Kontejnerizace & Orchestrace** | **Docker & Docker Compose** | 28+ / Compose v2 | Povinné minimum PPRO: spuštění kompletního řešení přes `docker compose up`. |
 | **Testovací frameworky** | **JUnit 5, Mockito, AssertJ** | 5.x | Unit testy doménové logiky a integrační testy skladových operací. |
 
@@ -158,21 +158,32 @@ Model obsahuje 9 entit (požadováno minimálně 5) a vazbu M:N mezi produkty a 
 
 ## 5. Návod ke spuštění a vývojové instrukce
 
-### 5.1 Požadavky na prostředí
-- Java JDK 21+
-- Docker a Docker Compose v2+
-- Git
+### 5.1 Rychlé spuštění v prohlížeči (Lokální vývoj)
+Aplikace běží přímo na lokálním portu `8080`.
+Pro spuštění stačí v kořeni repozitáře spustit:
+```bash
+# Windows
+.\gradlew.bat bootRun
 
-### 5.2 Spuštění pomocí Docker Compose
-Celý systém (databáze PostgreSQL + Spring Boot backend + Flyway migrace se seed daty) lze spustit jediným příkazem:
+# Linux / macOS
+./gradlew bootRun
+```
+Aplikaci pak ihned otevřete v prohlížeči na adrese: **`http://localhost:8080`**.
+
+### 5.2 Spuštění pomocí Docker Compose (Produkční běh s PostgreSQL)
+Celý systém (databáze PostgreSQL 16 + Spring Boot backend) lze spustit jediným příkazem:
 ```bash
 docker compose up --build
 ```
 Aplikace bude po naběhnutí dostupná na adrese `http://localhost:8080`.
 
-### 5.3 Spuštění testů
+### 5.3 Spuštění automatických testů
 ```bash
-./mvnw test
+# Windows
+.\gradlew.bat test
+
+# Linux / macOS
+./gradlew test
 ```
 
 ---
@@ -181,10 +192,11 @@ Aplikace bude po naběhnutí dostupná na adrese `http://localhost:8080`.
 
 | Fáze | Popis úkolu | Stav |
 |---|---|---|
-| **Fáze 1** | Změna zadání na Zadání B (Dřevěnka s.r.o.), aktualizace `AGENTS.md`, `README.md` a semestrální dokumentace `PPRO-dokumentace-sablona-v1.docx`. Příprava hrubého návrhu pro klienta. | Hotovo |
-| **Fáze 2** | Inicializace Spring Boot 3 projektu (Java 21, Maven wrapper), Docker Compose s PostgreSQL 16 a Flyway migracemi schématu pro sklady a produkty. | Plánováno |
-| **Fáze 3** | Implementace doménových entit (`Product`, `Category`, `Warehouse`, `StockItem`, `StockMovement`) a M:N vazby. | Plánováno |
-| **Fáze 4** | Implementace servisní vrstvy: dvouúrovňové odečítání zásoby (rezervace), odmítnutí při nedostatku, přesuny mezi sklady a auditní pohybový deník. | Plánováno |
-| **Fáze 5** | Webové rozhraní (Thymeleaf): mobilní pohled pro skladníka, úvodní dashboard s indikací „Co hoří“ a měsíční obrat po kategoriích. | Plánováno |
-| **Fáze 6** | Unit a integrační testy pro ověření povinného minima a zákazů (záporný stav, fixace ceny, odmítnutí objednávky). | Plánováno |
-| **Fáze 7** | Závěrečná validace a multi-stage Docker build. | Plánováno |
+| **Fáze 1** | Změna zadání na Zadání B (Dřevěnka s.r.o.), aktualizace `AGENTS.md`, `README.md` a semestrální dokumentace `PPRO-dokumentace-sablona-v1.docx`. Příprava hrubého návrhu pro klienta. | **Hotovo** |
+| **Fáze 2** | Inicializace Spring Boot 3 projektu (Java 21, Gradle wrapper), Docker Compose s PostgreSQL 16. | **Hotovo** |
+| **Fáze 3** | Implementace doménových entit (`Product`, `Category`, `Warehouse`, `StockItem`, `StockMovement`, `Customer`, `CustomerOrder`, `OrderItem`) a vazby M:N. | **Hotovo** |
+| **Fáze 4** | Implementace servisní vrstvy: disponibilní zásoba, rezervace, svozy dodávkou mezi sklady, odmítnutí při nedostatku a auditní pohybový deník. | **Hotovo** |
+| **Fáze 5** | Webové rozhraní (Thymeleaf + CSS): mobilní rozhraní pro skladníka, dashboard s indikátorem „🔴 CO HOŘÍ“, katalog, správa objednávek a měsíční obrat po kategoriích. | **Hotovo** |
+| **Fáze 6** | Unit a integrační testy pro ověření povinného minima (`DrevenkaApplicationTests`). | **Hotovo** |
+| **Fáze 7** | Závěrečná validace, multi-stage Dockerfile a prezentace klientovi. | **V běhu** |
+

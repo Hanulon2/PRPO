@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product.name} + ' | Detail hračky'"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <a th:href="@{/}" class="brand">
+            🪵 Dřevěnka s.r.o.
+            <span class="brand-badge">Sklad &amp; Expedice</span>
+        </a>
+        <nav>
+            <a th:href="@{/}">🏠 Přehled</a>
+            <a th:href="@{/products}" class="active">🧸 Katalog hraček</a>
+            <a th:href="@{/warehouse}">🏬 Sklady &amp; Převody</a>
+            <a th:href="@{/orders}">📋 Objednávky</a>
+            <a th:href="@{/reports}">📊 Měsíční obrat</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <div style="margin-bottom: 1rem;">
+        <a th:href="@{/products}" style="color: var(--primary); text-decoration: none; font-weight: 600;">&larr; Zpět do katalogu hraček</a>
+    </div>
+
+    <!-- Karta hračky -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem;" th:text="${product.name}">Dřevěná káča</h1>
+                <p style="color: var(--text-muted); font-size: 1.05rem;" th:text="${product.description}"></p>
+                <div style="margin-top: 0.75rem;">
+                    <span th:each="cat : ${product.categories}" class="badge badge-neutral" style="margin-right: 0.35rem;" th:text="${cat.name}"></span>
+                </div>
+            </div>
+            <div style="text-align: right; background: #f3f4f6; padding: 1rem; border-radius: 8px;">
+                <div style="font-size: 0.85rem; color: var(--text-muted);">SKU Kód: <strong th:text="${product.code}">KAC-001</strong></div>
+                <div style="font-size: 1.3rem; font-weight: 800; color: var(--primary); margin: 0.25rem 0;" th:text="${product.sellingPrice} + ' Kč'"></div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">Nákupní cena: <span th:text="${product.purchasePrice} + ' Kč'"></span></div>
+                <div style="font-size: 0.85rem; color: var(--danger); font-weight: 600; margin-top: 0.25rem;">Minimální limit: <span th:text="${product.minStockLimit} + ' ks'"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stav na skladech -->
+    <div class="card">
+        <h2 class="card-title">📍 Stav na jednotlivých skladech firmy</h2>
+        <div class="grid-2">
+            <div th:each="si : ${stockItems}" class="kpi-card" style="border: 2px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="font-size: 1.1rem;" th:text="${si.warehouse.name}">Hlavní sklad Hradec Králové</strong>
+                    <span th:if="${si.warehouse.isExpeditionPoint}" class="badge badge-success">Expediční sklad</span>
+                    <span th:if="${!si.warehouse.isExpeditionPoint}" class="badge badge-warning">Sezónní garáž</span>
+                </div>
+                <div style="margin: 1rem 0; display: flex; justify-content: space-around; text-align: center;">
+                    <div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Fyzicky na regále</div>
+                        <div style="font-size: 1.8rem; font-weight: 800;" th:text="${si.physicalQuantity}">0</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Rezervováno v obj.</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent);" th:text="${si.reservedQuantity}">0</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Volné k prodeji</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--success);" th:text="${si.availableQuantity}">0</div>
+                    </div>
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 0.5rem;" th:text="${si.warehouse.address}"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historie pohybů (Odpověď: Proč jich je 17 a ne 20?) -->
+    <div class="card">
+        <h2 class="card-title">📜 Historie všech skladových pohybů (Auditní deník)</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Odpovídá na otázku klienta: <em>„Proč jich je sedmnáct a ne dvacet?“</em> a <em>„Kde je ta káča, co jsem ji měl minulý týden?“</em>
+        </p>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Čas</th>
+                        <th>Typ pohybu</th>
+                        <th>Odkud</th>
+                        <th>Kam</th>
+                        <th>Množství</th>
+                        <th>Kdo provedl</th>
+                        <th>Poznámka / Důvod</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(movements)}">
+                        <td colspan="7" style="text-align: center; color: var(--text-muted);">Zatím nebyl zaznamenán žádný pohyb.</td>
+                    </tr>
+                    <tr th:each="m : ${movements}">
+                        <td style="font-size: 0.85rem; color: var(--text-muted);" th:text="${#temporals.format(m.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+                        <td>
+                            <span th:if="${m.movementType.name() == 'RECEIPT'}" class="badge badge-success">Příjem z výroby</span>
+                            <span th:if="${m.movementType.name() == 'DISPATCH'}" class="badge badge-neutral">Výdej zákazníkovi</span>
+                            <span th:if="${m.movementType.name() == 'TRANSFER'}" class="badge badge-warning">Meziskladový svoz</span>
+                            <span th:if="${m.movementType.name() == 'INVENTORY_CORRECTION'}" class="badge badge-danger">Inventurní úprava</span>
+                        </td>
+                        <td th:text="${m.sourceWarehouse != null ? m.sourceWarehouse.code : 'Truhlárna'}"></td>
+                        <td th:text="${m.targetWarehouse != null ? m.targetWarehouse.code : 'Zákazník'}"></td>
+                        <td><strong th:text="${m.quantity} + ' ks'"></strong></td>
+                        <td th:text="${m.performedBy}"></td>
+                        <td th:text="${m.reasonNote}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>

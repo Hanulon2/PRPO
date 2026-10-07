@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Měsíční obrat po kategoriích | Dřevěnka s.r.o.</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <a th:href="@{/}" class="brand">
+            🪵 Dřevěnka s.r.o.
+            <span class="brand-badge">Sklad &amp; Expedice</span>
+        </a>
+        <nav>
+            <a th:href="@{/}">🏠 Přehled</a>
+            <a th:href="@{/products}">🧸 Katalog hraček</a>
+            <a th:href="@{/warehouse}">🏬 Sklady &amp; Převody</a>
+            <a th:href="@{/orders}">📋 Objednávky</a>
+            <a th:href="@{/reports}" class="active">📊 Měsíční obrat</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <div class="card">
+        <div class="card-title">
+            <span>📊 Měsíční obrat a ziskovost po kategoriích hraček</span>
+            <span class="badge badge-neutral" th:text="'Období: ' + ${monthName}"></span>
+        </div>
+        <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            Odpovídá na otázku Petra Doležala: <em>„Co mě vlastně živí?“</em> 
+            Data jsou kalkulována ze skutečně odeslaných a zaplacených objednávek.
+        </p>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kategorie hraček</th>
+                        <th>Počet prodaných kusů</th>
+                        <th>Tržby celkem</th>
+                        <th>Hrubá marže (Zisk)</th>
+                        <th>Podíl na obratu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(report)}">
+                        <td colspan="5" style="text-align: center; color: var(--text-muted);">Zatím nebyly v tomto měsíci vyřízeny žádné objednávky.</td>
+                    </tr>
+                    <tr th:each="r : ${report}">
+                        <td><strong th:text="${r.categoryName}">Dřevěné vláčky</strong></td>
+                        <td><span th:text="${r.itemsSold} + ' ks'"></span></td>
+                        <td><strong th:text="${r.revenue} + ' Kč'"></strong></td>
+                        <td style="color: var(--success); font-weight: 600;" th:text="${r.margin} + ' Kč'"></td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="flex: 1; height: 10px; background: #e5e7eb; border-radius: 9999px; overflow: hidden; min-width: 80px;">
+                                    <div th:style="'height: 100%; background: var(--primary); width: ' + ${r.revenueSharePercentage} + '%;'"></div>
+                                </div>
+                                <span style="font-size: 0.85rem; font-weight: 700;" th:text="${r.revenueSharePercentage} + ' %'"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog dřevěných hraček | Dřevěnka s.r.o.</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <a th:href="@{/}" class="brand">
+            🪵 Dřevěnka s.r.o.
+            <span class="brand-badge">Sklad &amp; Expedice</span>
+        </a>
+        <nav>
+            <a th:href="@{/}">🏠 Přehled</a>
+            <a th:href="@{/products}" class="active">🧸 Katalog hraček</a>
+            <a th:href="@{/warehouse}">🏬 Sklady &amp; Převody</a>
+            <a th:href="@{/orders}">📋 Objednávky</a>
+            <a th:href="@{/reports}">📊 Měsíční obrat</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <div class="card">
+        <div class="card-title">
+            <span>🧸 Katalog vyráběných hraček</span>
+            <span style="font-size: 0.9rem; font-weight: normal; color: var(--text-muted);" th:text="'Celkem: ' + ${#lists.size(products)} + ' položek'"></span>
+        </div>
+
+        <!-- Filtry -->
+        <form th:action="@{/products}" method="get" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+            <input type="text" name="search" th:value="${searchQuery}" placeholder="🔍 Hledat podle názvu nebo kódu..." class="form-control" style="flex: 2; min-width: 200px;">
+            <select name="category" class="form-control" style="flex: 1; min-width: 180px;">
+                <option value="">-- Všechny kategorie --</option>
+                <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id == selectedCategoryId}"></option>
+            </select>
+            <button type="submit" class="btn btn-primary">Filtrovat</button>
+            <a th:href="@{/products}" class="btn btn-accent" style="background: #e5e7eb; color: #374151;">Zrušit</a>
+        </form>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kód (SKU)</th>
+                        <th>Název hračky</th>
+                        <th>Kategorie (M:N)</th>
+                        <th>Nákupní cena</th>
+                        <th>Prodejní cena</th>
+                        <th>Min. limit</th>
+                        <th>Detail &amp; Sklad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${products}">
+                        <td><strong th:text="${p.code}">KAC-001</strong></td>
+                        <td>
+                            <strong th:text="${p.name}">Dřevěná káča</strong>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${p.description}"></div>
+                        </td>
+                        <td>
+                            <span th:each="cat : ${p.categories}" class="badge badge-neutral" style="margin-right: 0.25rem; margin-bottom: 0.2rem;" th:text="${cat.name}"></span>
+                        </td>
+                        <td th:text="${p.purchasePrice} + ' Kč'"></td>
+                        <td><strong th:text="${p.sellingPrice} + ' Kč'"></strong></td>
+                        <td th:text="${p.minStockLimit} + ' ks'"></td>
+                        <td>
+                            <a th:href="@{/products/{id}(id=${p.id})}" class="btn btn-sm btn-primary">Stav skladů &rarr;</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>

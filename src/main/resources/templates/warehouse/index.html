@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sklady &amp; Převody | Dřevěnka s.r.o.</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <a th:href="@{/}" class="brand">
+            🪵 Dřevěnka s.r.o.
+            <span class="brand-badge">Sklad &amp; Expedice</span>
+        </a>
+        <nav>
+            <a th:href="@{/}">🏠 Přehled</a>
+            <a th:href="@{/products}">🧸 Katalog hraček</a>
+            <a th:href="@{/warehouse}" class="active">🏬 Sklady &amp; Převody</a>
+            <a th:href="@{/orders}">📋 Objednávky</a>
+            <a th:href="@{/reports}">📊 Měsíční obrat</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- Flash hlášky -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="grid-2">
+        <!-- Formulář meziskladového převodu -->
+        <div class="card" style="border-top: 4px solid var(--accent);">
+            <h2 class="card-title">🚚 Meziskladový přesun (Závoz dodávkou)</h2>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Eviduje přesun zboží ze sezónní garáže v Třebechovicích do expedičního skladu v Hradci Králové.
+            </p>
+            <form th:action="@{/warehouse/transfer}" method="post">
+                <div class="form-group">
+                    <label class="form-label">Dřevěná hračka:</label>
+                    <select name="productId" class="form-control" required>
+                        <option value="">-- Vyberte produkt --</option>
+                        <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name} + ' (' + ${p.code} + ')'"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Zdrojový sklad (odkud se nakládá):</label>
+                    <select name="sourceWarehouseId" class="form-control" required>
+                        <option th:each="w : ${warehouses}" th:value="${w.id}" th:text="${w.name}" th:selected="${w.code == 'TREBECHOVICE'}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Cílový sklad (kam se vykládá):</label>
+                    <select name="targetWarehouseId" class="form-control" required>
+                        <option th:each="w : ${warehouses}" th:value="${w.id}" th:text="${w.name}" th:selected="${w.code == 'HRADEC'}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Počet kusů k převozu:</label>
+                    <input type="number" name="quantity" class="form-control" min="1" value="10" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Poznámka ke svozu:</label>
+                    <input type="text" name="note" class="form-control" placeholder="Např. Páteční závoz před víkendem">
+                </div>
+                <button type="submit" class="btn btn-accent" style="width: 100%;">Zaznamenat převoz dodávkou</button>
+            </form>
+        </div>
+
+        <!-- Formulář skladové inventury -->
+        <div class="card" style="border-top: 4px solid var(--danger);">
+            <h2 class="card-title">📋 Skladová inventura &amp; Dorovnání</h2>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Řeší problém Petra Doležala, kdy <em>„v garáži stav nikdy nesedí“</em>. Zabrání zápornému stavu a zaznamená manko či přebytek.
+            </p>
+            <form th:action="@{/warehouse/inventory}" method="post">
+                <div class="form-group">
+                    <label class="form-label">Dřevěná hračka:</label>
+                    <select name="productId" class="form-control" required>
+                        <option value="">-- Vyberte produkt --</option>
+                        <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name} + ' (' + ${p.code} + ')'"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sklad k přepočítání:</label>
+                    <select name="warehouseId" class="form-control" required>
+                        <option th:each="w : ${warehouses}" th:value="${w.id}" th:text="${w.name}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Skutečně napočítaný fyzický stav (ks):</label>
+                    <input type="number" name="newQuantity" class="form-control" min="0" placeholder="Zadejte reálný počet kusů na regále" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Povinný důvod zjištěného rozdílu:</label>
+                    <input type="text" name="reason" class="form-control" placeholder="Např. Poškození vlhkostí, rozbití při manipulaci, nalezená bedna" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; background: var(--primary);">Uložit inventurní narovnání</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Celkový auditní log -->
+    <div class="card">
+        <h2 class="card-title">📜 Neměnná kniha skladových pohybů (Auditní deník)</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Čas</th>
+                        <th>Typ pohybu</th>
+                        <th>Hračka</th>
+                        <th>Změna</th>
+                        <th>Odkud</th>
+                        <th>Kam</th>
+                        <th>Zapsal</th>
+                        <th>Poznámka</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="m : ${movements}">
+                        <td style="font-size: 0.85rem; color: var(--text-muted);" th:text="${#temporals.format(m.createdAt, 'dd.MM.yyyy HH:mm:ss')}"></td>
+                        <td>
+                            <span th:if="${m.movementType.name() == 'RECEIPT'}" class="badge badge-success">Příjem z výroby</span>
+                            <span th:if="${m.movementType.name() == 'DISPATCH'}" class="badge badge-neutral">Výdej zákazníkovi</span>
+                            <span th:if="${m.movementType.name() == 'TRANSFER'}" class="badge badge-warning">Meziskladový svoz</span>
+                            <span th:if="${m.movementType.name() == 'INVENTORY_CORRECTION'}" class="badge badge-danger">Inventura</span>
+                        </td>
+                        <td><strong th:text="${m.product.name}">Káča</strong></td>
+                        <td>
+                            <span th:text="${(m.movementType.name() == 'DISPATCH' ? '-' : '+') + m.quantity + ' ks'}" style="font-weight: 700;"></span>
+                        </td>
+                        <td th:text="${m.sourceWarehouse != null ? m.sourceWarehouse.code : '-'}"></td>
+                        <td th:text="${m.targetWarehouse != null ? m.targetWarehouse.code : '-'}"></td>
+                        <td th:text="${m.performedBy}"></td>
+                        <td th:text="${m.reasonNote}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>
