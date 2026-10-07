@@ -46,5 +46,18 @@ Technicky je systém postaven jako třívrstvá enterprise aplikace v jazyce Jav
 |---|---|---|---|---|
 | **Z1** | 7. 10. 2026 | „Dvakrát měsíčně prodáme něco, co nemáme na skladě. To se nesmí stávat.“ | Zavedení konceptu disponibilní zásoby a okamžité rezervace; automatické odmítnutí objednávky při nedostatku volných kusů. Viz R5. | hotovo |
 | **Z2** | 7. 10. 2026 | „V garáži stav nikdy nesedí, potřebuju vědět, proč jich je sedmnáct a ne dvacet.“ | Zavedení neměnné tabulky skladových pohybů (`StockMovement`) a modulu inventury pro evidenci manka/přebytku. Viz R6. | hotovo |
-| **Z3** | 7. 10. 2026 | „Potřebuju na úvodní stránce barevně vidět, co hoří a co musím doobjednat.“ | Dashboard s přehledem produktů pod minimálním limitem zásob, barevná vizualizace (červená/oranžová) a rychlá tvorba nákupního požadavku. Viz R10. | rozpracováno |
-| **Z4** | 7. 10. 2026 | „Ať to jde používat i z mobilu, já jsem půlku dne ve skladu.“ | Responzivní design pro skladové operace (příjem, přesun, inventura) přizpůsobený dotykovému ovládání. Viz R10. | rozpracováno |
+| **Z3** | 7. 10. 2026 | „Potřebuju na úvodní stránce barevně vidět, co hoří a co musím doobjednat.“ | Dashboard s přehledem produktů pod minimálním limitem zásob, barevná vizualizace (červená/oranžová) a rychlá tvorba nákupního požadavku. Viz R10. | hotovo |
+| **Z4** | 7. 10. 2026 | „Ať to jde používat i z mobilu, já jsem půlku dne ve skladu.“ | Responzivní design pro skladové operace (příjem, přesun, inventura) přizpůsobený dotykovému ovládání. Viz R10. | hotovo |
+
+---
+
+## 4. Stav implementace funkčního prototypu
+
+V rámci první fáze vývoje byl vytvořen plně funkční a spustitelný prototyp webové aplikace, který je ihned k dispozici pro předvedení klientovi na adrese `http://localhost:8080`:
+
+1. **Dashboard (`/`):** Obsahuje widget „🔴 CO HOŘÍ“ zobrazující položky pod minimálním limitem, skladové statistiky, formuláře pro okamžitý příjem a meziskladový závoz dodávkou a auditní deník posledních pohybů.
+2. **Katalog hraček (`/products`, `/products/{id}`):** Zobrazuje produkty, rozpad disponibilní zásoby a na detailu produktu rozpad kusů mezi skladem v Hradci Králové a sezónní garáží v Třebechovicích.
+3. **Sklad a převody (`/warehouse`):** Formulář meziskladového svozu z garáže do expedičního skladu s validací disponibilního množství, formulář pro inventuru a kompletní auditní deník.
+4. **Objednávky a expedice (`/orders`):** Přehled objednávek, simulátor nové objednávky z e-shopu (automatické přepínání do `CONFIRMED`, `WAITING_FOR_TRANSFER` nebo `REJECTED`) a tlačítko pro zabalení a expedici s fyzickým odpisem zásoby.
+5. **Finanční reporting (`/reports`):** Vyhodnocení měsíčního obratu, nákupních nákladů a hrubé marže podle kategorií hraček.
+
