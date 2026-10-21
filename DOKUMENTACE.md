@@ -62,5 +62,7 @@ V rámci dosavadního vývoje byl vytvořen a odladěn plně funkční a spustit
 3. **Skladové hospodářství a převody (`/warehouse`):** Formulář vystavení meziskladové převodky s validací disponibilního množství, formulář pro inventurní vyrovnání manka/přebytku s povinným zdůvodněním a centrální auditní deník.
 4. **Objednávky a expedice (`/orders`):** Přehled objednávek se zafixovanou cenou v době nákupu (Price Snapshot), simulace příchozí objednávky s automatickou rezervací / striktním zamítnutím při nedostatku volné zásoby a tlačítko fyzické expedice balíku.
 5. **Rentabilita a obrat dle kategorií (`/reports`):** Vyhodnocení měsíčního obratu, nákupních nákladů, hrubé marže a podílu jednotlivých kategorií hraček na celkových tržbách.
+6. **Kontejnerizace a databáze (Docker Compose):** Kompletní aplikace i s produkční relační databází PostgreSQL 16 je plně kontejnerizována pomocí multi-stage Dockerfile a spustitelná příkazem `docker compose up --build`.
+
 
 
