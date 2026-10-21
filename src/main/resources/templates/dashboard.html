@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sklad Dřevěnka s.r.o. | Přehled skladu</title>
+    <title>Skladový dispečink | Dřevěnka WMS</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -11,142 +11,179 @@
 <header>
     <div class="header-container">
         <a th:href="@{/}" class="brand">
-            🪵 Dřevěnka s.r.o.
-            <span class="brand-badge">Sklad &amp; Expedice</span>
+            <span class="brand-logo">D</span>
+            <span class="brand-text">DŘEVĚNKA</span>
+            <span class="brand-badge">WMS &bull; Sklad</span>
         </a>
         <nav>
-            <a th:href="@{/}" class="active">🏠 Přehled</a>
-            <a th:href="@{/products}">🧸 Katalog hraček</a>
-            <a th:href="@{/warehouse}">🏬 Sklady &amp; Převody</a>
-            <a th:href="@{/orders}">📋 Objednávky</a>
-            <a th:href="@{/reports}">📊 Měsíční obrat</a>
+            <a th:href="@{/}" class="active">Přehled</a>
+            <a th:href="@{/products}">Katalog produktů</a>
+            <a th:href="@{/warehouse}">Sklady a převody</a>
+            <a th:href="@{/orders}">Objednávky</a>
+            <a th:href="@{/reports}">Finanční reporty</a>
         </nav>
     </div>
 </header>
 
 <main class="container">
 
-    <!-- Flash hlášky -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Skladový a expediční dispečink</h1>
+            <p class="page-desc">Centrální správa zásob pro expediční sklad Hradec Králové a sezónní sklad Třebechovice</p>
+        </div>
+    </div>
+
+    <!-- Systémové zprávy -->
     <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
     <div th:if="${warningMessage}" class="alert alert-warning" th:text="${warningMessage}"></div>
     <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-    <!-- KPI Boxy -->
+    <!-- Klíčové ukazatele (KPI) -->
     <div class="grid-3">
         <div class="kpi-card">
-            <span class="kpi-label">K zabalení u stolu</span>
-            <div class="kpi-value" th:text="${toPackCount}">0</div>
-            <span class="kpi-sub">Objednávky s potvrzenou rezervací v Hradci</span>
+            <div class="kpi-header">
+                <span class="kpi-label">Objednávky k expedici</span>
+            </div>
+            <div class="kpi-value tabular-num" th:text="${toPackCount}">0</div>
+            <span class="kpi-sub">Potvrzené rezervace na expedičním skladě</span>
         </div>
         <div class="kpi-card">
-            <span class="kpi-label">Ke svozu z garáže</span>
-            <div class="kpi-value" th:text="${toTransferCount}" style="color: var(--accent);">0</div>
-            <span class="kpi-sub">Objednávky čekající na závoz z Třebechovic</span>
+            <div class="kpi-header">
+                <span class="kpi-label">Čeká na meziskladový svoz</span>
+            </div>
+            <div class="kpi-value tabular-num" style="color: var(--warning);" th:text="${toTransferCount}">0</div>
+            <span class="kpi-sub">Položky vyžadující převoz dodávkou z garáže</span>
         </div>
         <div class="kpi-card">
-            <span class="kpi-label">Položek pod minimem</span>
-            <div class="kpi-value" th:text="${#lists.size(belowMinItems)}" style="color: var(--danger);">0</div>
-            <span class="kpi-sub">Vyžaduje okamžitou výrobu nebo svoz</span>
+            <div class="kpi-header">
+                <span class="kpi-label">Položky pod minimálním limitem</span>
+            </div>
+            <div class="kpi-value tabular-num" style="color: var(--danger);" th:text="${#lists.size(belowMinItems)}">0</div>
+            <span class="kpi-sub">Vyžaduje zadání do výroby v truhlárně</span>
         </div>
     </div>
 
-    <!-- SEKCE CO HOŘÍ -->
+    <!-- Sekce podlimitních zásob -->
     <div class="card urgent-box">
-        <div class="urgent-header">
-            <span>🔥</span> CO HOŘÍ – Zboží pod minimální zásobou v Hradci Králové
+        <div class="card-header" style="border-bottom-color: var(--danger-border);">
+            <div>
+                <h2 class="card-title" style="color: var(--danger-text);">Kritický stav zásob (pod bezpečnostním limitem)</h2>
+                <p class="card-subtitle">Položky na hlavním skladě Hradec Králové s bezprostředním rizikem vyprodání</p>
+            </div>
+            <span class="badge badge-danger">
+                <span class="status-dot"></span>
+                <span th:text="${#lists.size(belowMinItems)} + ' položek'">0 položek</span>
+            </span>
         </div>
+
         <div th:if="${#lists.isEmpty(belowMinItems)}">
-            <p style="color: var(--success); font-weight: 600;">✅ Všechny položky na hlavním skladě mají dostatečnou zásobu.</p>
+            <p style="color: var(--success); font-weight: 500;">Všechny skladové položky mají dostatečnou disponibilní rezervu nad stanoveným minimem.</p>
         </div>
+
         <div th:each="item : ${belowMinItems}" class="urgent-item">
             <div>
-                <strong style="font-size: 1.05rem;" th:text="${item.product.name}">Dřevěná káča</strong>
-                <span class="badge badge-neutral" style="margin-left: 0.5rem;" th:text="${item.product.code}">KAC-001</span>
-                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">
-                    Minimální požadovaný limit: <strong th:text="${item.product.minStockLimit}">15</strong> ks
+                <div>
+                    <strong style="font-size: 14px;" th:text="${item.product.name}">Název hračky</strong>
+                    <span class="sku-code" style="margin-left: 0.5rem;" th:text="${item.product.code}">SKU-001</span>
+                </div>
+                <div style="font-size: 12px; color: var(--slate-500); margin-top: 4px;">
+                    Bezpečnostní minimum: <strong class="tabular-num" th:text="${item.product.minStockLimit}">15</strong> ks
                 </div>
             </div>
-            <div style="text-align: right;">
-                <span th:if="${item.availableQuantity == 0}" class="badge badge-danger">VYPRODÁNO (0 ks)</span>
-                <span th:if="${item.availableQuantity > 0}" class="badge badge-warning" th:text="'Zbývá: ' + ${item.availableQuantity} + ' ks'"></span>
-                <div style="margin-top: 0.4rem;">
-                    <a th:href="@{/products/{id}(id=${item.product.id})}" class="btn btn-sm btn-primary">Zkontrolovat stav</a>
-                </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span th:if="${item.availableQuantity == 0}" class="badge badge-danger">
+                    <span class="status-dot"></span>Vyprodáno (0 ks)
+                </span>
+                <span th:if="${item.availableQuantity > 0}" class="badge badge-warning">
+                    <span class="status-dot"></span>Zbývá: <span class="tabular-num" th:text="${item.availableQuantity}"></span> ks
+                </span>
+                <a th:href="@{/products/{id}(id=${item.product.id})}" class="btn btn-sm btn-secondary">Karta produktu &rarr;</a>
             </div>
         </div>
     </div>
 
-    <!-- Dva sloupce: Rychlé skladové akce a Poslední pohyby -->
+    <!-- Spodní sekce: Operativní transakce a Auditní deník -->
     <div class="grid-2">
-        <!-- Rychlé akce -->
+        <!-- Rychlé skladové transakce -->
         <div class="card">
-            <h2 class="card-title">⚡ Rychlé akce pro skladníka</h2>
-            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
-                Ovládání pro Petra Doležala na mobilu při práci ve skladu.
-            </p>
-
-            <form th:action="@{/warehouse/receive}" method="post" class="form-group" style="padding: 0.75rem; background: #f9fafb; border-radius: 8px;">
-                <strong style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">📥 Příjem z truhlárny na sklad:</strong>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                    <select name="productId" class="form-control" style="flex: 2; min-width: 140px;" required>
-                        <option value="">-- Vyberte hračku --</option>
-                        <option th:each="p : ${allProducts}" th:value="${p.id}" th:text="${p.name}"></option>
-                    </select>
-                    <select name="warehouseId" class="form-control" style="flex: 1; min-width: 120px;" required>
-                        <option th:each="w : ${warehouses}" th:value="${w.id}" th:text="${w.code}"></option>
-                    </select>
-                    <input type="number" name="quantity" class="form-control" placeholder="Ks" style="width: 70px;" min="1" value="10" required>
-                    <button type="submit" class="btn btn-primary btn-sm">Naskladnit</button>
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Operativní skladové transakce</h2>
+                    <p class="card-subtitle">Přímé zaevidování příjmu z výroby nebo svozu dodávkou</p>
                 </div>
-            </form>
+            </div>
 
-            <form th:action="@{/warehouse/transfer}" method="post" class="form-group" style="padding: 0.75rem; background: #fffaf5; border-radius: 8px; border: 1px solid #fed7aa;">
-                <strong style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--accent-hover);">🚚 Svoz z garáže Třebechovice do Hradce:</strong>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                    <select name="productId" class="form-control" style="flex: 2; min-width: 140px;" required>
-                        <option value="">-- Vyberte hračku --</option>
-                        <option th:each="p : ${allProducts}" th:value="${p.id}" th:text="${p.name}"></option>
-                    </select>
-                    <input type="hidden" name="sourceWarehouseId" th:value="${trebechovice.id}">
-                    <input type="hidden" name="targetWarehouseId" th:value="${hradec.id}">
-                    <input type="number" name="quantity" class="form-control" placeholder="Ks" style="width: 70px;" min="1" value="10" required>
-                    <button type="submit" class="btn btn-accent btn-sm">Převézt dodávkou</button>
-                </div>
-            </form>
+            <div class="form-box">
+                <div class="form-box-title">Příjem hotových výrobků z výroby (Truhlárna):</div>
+                <form th:action="@{/warehouse/receive}" method="post">
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <select name="productId" class="form-control" style="flex: 2; min-width: 150px;" required>
+                            <option value="">-- Vyberte produkt --</option>
+                            <option th:each="p : ${allProducts}" th:value="${p.id}" th:text="${p.name}"></option>
+                        </select>
+                        <select name="warehouseId" class="form-control" style="flex: 1; min-width: 120px;" required>
+                            <option th:each="w : ${warehouses}" th:value="${w.id}" th:text="${w.code}"></option>
+                        </select>
+                        <input type="number" name="quantity" class="form-control" placeholder="Ks" style="width: 75px;" min="1" value="10" required>
+                        <button type="submit" class="btn btn-primary btn-sm">Naskladnit</button>
+                    </div>
+                </form>
+            </div>
 
-            <div style="text-align: center; margin-top: 1rem;">
-                <a th:href="@{/orders}" class="btn btn-sm btn-primary" style="width: auto;">📋 Přejít na balicí stůl objednávek &rarr;</a>
+            <div class="form-box" style="background-color: var(--primary-light); border-color: var(--primary-border);">
+                <div class="form-box-title" style="color: var(--primary);">Meziskladový svoz (Třebechovice &rarr; Hradec Králové):</div>
+                <form th:action="@{/warehouse/transfer}" method="post">
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <select name="productId" class="form-control" style="flex: 2; min-width: 150px;" required>
+                            <option value="">-- Vyberte produkt --</option>
+                            <option th:each="p : ${allProducts}" th:value="${p.id}" th:text="${p.name}"></option>
+                        </select>
+                        <input type="hidden" name="sourceWarehouseId" th:value="${trebechovice.id}">
+                        <input type="hidden" name="targetWarehouseId" th:value="${hradec.id}">
+                        <input type="number" name="quantity" class="form-control" placeholder="Ks" style="width: 75px;" min="1" value="10" required>
+                        <button type="submit" class="btn btn-accent btn-sm">Zaevidovat převod</button>
+                    </div>
+                </form>
+            </div>
+
+            <div style="text-align: right; margin-top: 0.75rem;">
+                <a th:href="@{/orders}" class="btn btn-sm btn-secondary">Přejít k balení objednávek &rarr;</a>
             </div>
         </div>
 
-        <!-- Poslední pohyby ve skladovém deníku -->
+        <!-- Auditní deník -->
         <div class="card">
-            <h2 class="card-title">
-                📜 Skladový deník
-                <a th:href="@{/warehouse}" style="font-size: 0.85rem; font-weight: normal; color: var(--primary);">Zobrazit vše &rarr;</a>
-            </h2>
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Auditní deník skladových pohybů</h2>
+                    <p class="card-subtitle">Poslední zaznamenané transakce v systému</p>
+                </div>
+                <a th:href="@{/warehouse}" class="btn btn-sm btn-secondary">Celý deník</a>
+            </div>
+
             <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th>Datum</th>
-                            <th>Typ</th>
-                            <th>Hračka</th>
-                            <th>Množství</th>
+                            <th>Čas</th>
+                            <th>Typ operace</th>
+                            <th>Produkt</th>
+                            <th style="text-align: right;">Pohyb</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="m : ${recentMovements}">
-                            <td style="font-size: 0.8rem; color: var(--text-muted);" th:text="${#temporals.format(m.createdAt, 'dd.MM. HH:mm')}"></td>
+                            <td class="tabular-num" style="color: var(--slate-500); font-size: 12px;" th:text="${#temporals.format(m.createdAt, 'dd.MM. HH:mm')}"></td>
                             <td>
-                                <span th:if="${m.movementType.name() == 'RECEIPT'}" class="badge badge-success">Příjem</span>
-                                <span th:if="${m.movementType.name() == 'DISPATCH'}" class="badge badge-neutral">Výdej</span>
-                                <span th:if="${m.movementType.name() == 'TRANSFER'}" class="badge badge-warning">Přesun</span>
-                                <span th:if="${m.movementType.name() == 'INVENTORY_CORRECTION'}" class="badge badge-danger">Inventura</span>
+                                <span th:if="${m.movementType.name() == 'RECEIPT'}" class="badge badge-success"><span class="status-dot"></span>Příjem</span>
+                                <span th:if="${m.movementType.name() == 'DISPATCH'}" class="badge badge-neutral"><span class="status-dot"></span>Výdej</span>
+                                <span th:if="${m.movementType.name() == 'TRANSFER'}" class="badge badge-warning"><span class="status-dot"></span>Přesun</span>
+                                <span th:if="${m.movementType.name() == 'INVENTORY_CORRECTION'}" class="badge badge-danger"><span class="status-dot"></span>Inventura</span>
                             </td>
-                            <td><strong th:text="${m.product.name}">Káča</strong></td>
-                            <td>
-                                <span th:text="${(m.movementType.name() == 'DISPATCH' ? '-' : '+') + m.quantity + ' ks'}" style="font-weight: 700;"></span>
+                            <td><strong th:text="${m.product.name}">Produkt</strong></td>
+                            <td style="text-align: right;" class="tabular-num">
+                                <strong th:text="${(m.movementType.name() == 'DISPATCH' ? '-' : '+') + m.quantity + ' ks'}"></strong>
                             </td>
                         </tr>
                     </tbody>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Měsíční obrat po kategoriích | Dřevěnka s.r.o.</title>
+    <title>Finanční reporty &amp; Marže | Dřevěnka WMS</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -11,57 +11,66 @@
 <header>
     <div class="header-container">
         <a th:href="@{/}" class="brand">
-            🪵 Dřevěnka s.r.o.
-            <span class="brand-badge">Sklad &amp; Expedice</span>
+            <span class="brand-logo">D</span>
+            <span class="brand-text">DŘEVĚNKA</span>
+            <span class="brand-badge">WMS &bull; Sklad</span>
         </a>
         <nav>
-            <a th:href="@{/}">🏠 Přehled</a>
-            <a th:href="@{/products}">🧸 Katalog hraček</a>
-            <a th:href="@{/warehouse}">🏬 Sklady &amp; Převody</a>
-            <a th:href="@{/orders}">📋 Objednávky</a>
-            <a th:href="@{/reports}" class="active">📊 Měsíční obrat</a>
+            <a th:href="@{/}">Přehled</a>
+            <a th:href="@{/products}">Katalog produktů</a>
+            <a th:href="@{/warehouse}">Sklady a převody</a>
+            <a th:href="@{/orders}">Objednávky</a>
+            <a th:href="@{/reports}" class="active">Finanční reporty</a>
         </nav>
     </div>
 </header>
 
 <main class="container">
 
-    <div class="card">
-        <div class="card-title">
-            <span>📊 Měsíční obrat a ziskovost po kategoriích hraček</span>
-            <span class="badge badge-neutral" th:text="'Období: ' + ${monthName}"></span>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Rentabilita a obrat dle kategorií</h1>
+            <p class="page-desc">Finanční ukazatele z reálně vyřízených a vyexpedovaných objednávek</p>
         </div>
-        <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem;">
-            Odpovídá na otázku Petra Doležala: <em>„Co mě vlastně živí?“</em> 
-            Data jsou kalkulována ze skutečně odeslaných a zaplacených objednávek.
-        </p>
+        <div>
+            <span class="badge badge-neutral" th:text="'Sledované období: ' + ${monthName}"></span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Měsíční přehled tržeb a hrubé marže</h2>
+                <p class="card-subtitle">Kalkulace výnosů a marží na základě zafixovaných cenových snapshotů položek</p>
+            </div>
+        </div>
 
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
-                        <th>Kategorie hraček</th>
-                        <th>Počet prodaných kusů</th>
-                        <th>Tržby celkem</th>
-                        <th>Hrubá marže (Zisk)</th>
-                        <th>Podíl na obratu</th>
+                        <th>Produktová kategorie</th>
+                        <th style="text-align: right;">Prodané kusy</th>
+                        <th style="text-align: right;">Celkové tržby</th>
+                        <th style="text-align: right;">Hrubá marže</th>
+                        <th style="width: 220px; text-align: left;">Podíl na obratu</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:if="${#lists.isEmpty(report)}">
-                        <td colspan="5" style="text-align: center; color: var(--text-muted);">Zatím nebyly v tomto měsíci vyřízeny žádné objednávky.</td>
+                        <td colspan="5" style="text-align: center; color: var(--slate-500); padding: 2rem;">V aktuálním kalendářním období nebyly zatím zaevidovány žádné vyexpedované objednávky.</td>
                     </tr>
                     <tr th:each="r : ${report}">
                         <td><strong th:text="${r.categoryName}">Dřevěné vláčky</strong></td>
-                        <td><span th:text="${r.itemsSold} + ' ks'"></span></td>
-                        <td><strong th:text="${r.revenue} + ' Kč'"></strong></td>
-                        <td style="color: var(--success); font-weight: 600;" th:text="${r.margin} + ' Kč'"></td>
+                        <td style="text-align: right;" class="tabular-num"><span th:text="${r.itemsSold} + ' ks'"></span></td>
+                        <td style="text-align: right;" class="tabular-num"><strong th:text="${r.revenue} + ' Kč'"></strong></td>
+                        <td style="text-align: right; color: var(--success); font-weight: 600;" class="tabular-num" th:text="${r.margin} + ' Kč'"></td>
                         <td>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <div style="flex: 1; height: 10px; background: #e5e7eb; border-radius: 9999px; overflow: hidden; min-width: 80px;">
-                                    <div th:style="'height: 100%; background: var(--primary); width: ' + ${r.revenueSharePercentage} + '%;'"></div>
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div class="progress-bar" style="flex: 1;">
+                                    <div class="progress-bar-fill" th:style="'width: ' + ${r.revenueSharePercentage} + '%;'"></div>
                                 </div>
-                                <span style="font-size: 0.85rem; font-weight: 700;" th:text="${r.revenueSharePercentage} + ' %'"></span>
+                                <span class="tabular-num" style="font-size: 12px; font-weight: 600; min-width: 45px; text-align: right;" th:text="${r.revenueSharePercentage} + ' %'"></span>
                             </div>
                         </td>
                     </tr>

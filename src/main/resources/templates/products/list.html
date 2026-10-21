@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog dřevěných hraček | Dřevěnka s.r.o.</title>
+    <title>Katalog produktů | Dřevěnka WMS</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -11,66 +11,72 @@
 <header>
     <div class="header-container">
         <a th:href="@{/}" class="brand">
-            🪵 Dřevěnka s.r.o.
-            <span class="brand-badge">Sklad &amp; Expedice</span>
+            <span class="brand-logo">D</span>
+            <span class="brand-text">DŘEVĚNKA</span>
+            <span class="brand-badge">WMS &bull; Sklad</span>
         </a>
         <nav>
-            <a th:href="@{/}">🏠 Přehled</a>
-            <a th:href="@{/products}" class="active">🧸 Katalog hraček</a>
-            <a th:href="@{/warehouse}">🏬 Sklady &amp; Převody</a>
-            <a th:href="@{/orders}">📋 Objednávky</a>
-            <a th:href="@{/reports}">📊 Měsíční obrat</a>
+            <a th:href="@{/}">Přehled</a>
+            <a th:href="@{/products}" class="active">Katalog produktů</a>
+            <a th:href="@{/warehouse}">Sklady a převody</a>
+            <a th:href="@{/orders}">Objednávky</a>
+            <a th:href="@{/reports}">Finanční reporty</a>
         </nav>
     </div>
 </header>
 
 <main class="container">
 
-    <div class="card">
-        <div class="card-title">
-            <span>🧸 Katalog vyráběných hraček</span>
-            <span style="font-size: 0.9rem; font-weight: normal; color: var(--text-muted);" th:text="'Celkem: ' + ${#lists.size(products)} + ' položek'"></span>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Katalog skladových položek</h1>
+            <p class="page-desc">Kompletní evidence produktů, cenových relací a kategorií</p>
         </div>
+        <div>
+            <span class="badge badge-neutral" th:text="'Celkem evidováno: ' + ${#lists.size(products)} + ' položek'"></span>
+        </div>
+    </div>
 
-        <!-- Filtry -->
-        <form th:action="@{/products}" method="get" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
-            <input type="text" name="search" th:value="${searchQuery}" placeholder="🔍 Hledat podle názvu nebo kódu..." class="form-control" style="flex: 2; min-width: 200px;">
+    <div class="card">
+        <!-- Filtrovací lišta -->
+        <form th:action="@{/products}" method="get" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <input type="text" name="search" th:value="${searchQuery}" placeholder="Hledat podle kódu SKU nebo názvu..." class="form-control" style="flex: 2; min-width: 220px;">
             <select name="category" class="form-control" style="flex: 1; min-width: 180px;">
-                <option value="">-- Všechny kategorie --</option>
+                <option value="">Všechny kategorie</option>
                 <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id == selectedCategoryId}"></option>
             </select>
             <button type="submit" class="btn btn-primary">Filtrovat</button>
-            <a th:href="@{/products}" class="btn btn-accent" style="background: #e5e7eb; color: #374151;">Zrušit</a>
+            <a th:href="@{/products}" class="btn btn-secondary">Zrušit filtr</a>
         </form>
 
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
-                        <th>Kód (SKU)</th>
-                        <th>Název hračky</th>
-                        <th>Kategorie (M:N)</th>
-                        <th>Nákupní cena</th>
-                        <th>Prodejní cena</th>
-                        <th>Min. limit</th>
-                        <th>Detail &amp; Sklad</th>
+                        <th>Kód položky (SKU)</th>
+                        <th>Název a popis</th>
+                        <th>Kategorie (vazba M:N)</th>
+                        <th style="text-align: right;">Nákupní cena</th>
+                        <th style="text-align: right;">Prodejní cena</th>
+                        <th style="text-align: right;">Min. limit</th>
+                        <th style="text-align: center;">Akce</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="p : ${products}">
-                        <td><strong th:text="${p.code}">KAC-001</strong></td>
+                        <td><span class="sku-code" th:text="${p.code}">KAC-001</span></td>
                         <td>
                             <strong th:text="${p.name}">Dřevěná káča</strong>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${p.description}"></div>
+                            <div style="font-size: 12px; color: var(--slate-500); margin-top: 2px;" th:text="${p.description}"></div>
                         </td>
                         <td>
                             <span th:each="cat : ${p.categories}" class="badge badge-neutral" style="margin-right: 0.25rem; margin-bottom: 0.2rem;" th:text="${cat.name}"></span>
                         </td>
-                        <td th:text="${p.purchasePrice} + ' Kč'"></td>
-                        <td><strong th:text="${p.sellingPrice} + ' Kč'"></strong></td>
-                        <td th:text="${p.minStockLimit} + ' ks'"></td>
-                        <td>
-                            <a th:href="@{/products/{id}(id=${p.id})}" class="btn btn-sm btn-primary">Stav skladů &rarr;</a>
+                        <td style="text-align: right;" class="tabular-num" th:text="${p.purchasePrice} + ' Kč'"></td>
+                        <td style="text-align: right;" class="tabular-num"><strong th:text="${p.sellingPrice} + ' Kč'"></strong></td>
+                        <td style="text-align: right;" class="tabular-num" th:text="${p.minStockLimit} + ' ks'"></td>
+                        <td style="text-align: center;">
+                            <a th:href="@{/products/{id}(id=${p.id})}" class="btn btn-sm btn-secondary">Karta položky &rarr;</a>
                         </td>
                     </tr>
                 </tbody>

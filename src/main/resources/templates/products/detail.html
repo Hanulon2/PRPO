@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${product.name} + ' | Detail hračky'"></title>
+    <title th:text="${product.name} + ' | Karta položky | Dřevěnka WMS'"></title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -11,109 +11,124 @@
 <header>
     <div class="header-container">
         <a th:href="@{/}" class="brand">
-            🪵 Dřevěnka s.r.o.
-            <span class="brand-badge">Sklad &amp; Expedice</span>
+            <span class="brand-logo">D</span>
+            <span class="brand-text">DŘEVĚNKA</span>
+            <span class="brand-badge">WMS &bull; Sklad</span>
         </a>
         <nav>
-            <a th:href="@{/}">🏠 Přehled</a>
-            <a th:href="@{/products}" class="active">🧸 Katalog hraček</a>
-            <a th:href="@{/warehouse}">🏬 Sklady &amp; Převody</a>
-            <a th:href="@{/orders}">📋 Objednávky</a>
-            <a th:href="@{/reports}">📊 Měsíční obrat</a>
+            <a th:href="@{/}">Přehled</a>
+            <a th:href="@{/products}" class="active">Katalog produktů</a>
+            <a th:href="@{/warehouse}">Sklady a převody</a>
+            <a th:href="@{/orders}">Objednávky</a>
+            <a th:href="@{/reports}">Finanční reporty</a>
         </nav>
     </div>
 </header>
 
 <main class="container">
 
-    <div style="margin-bottom: 1rem;">
-        <a th:href="@{/products}" style="color: var(--primary); text-decoration: none; font-weight: 600;">&larr; Zpět do katalogu hraček</a>
+    <div style="margin-bottom: 1.25rem;">
+        <a th:href="@{/products}" class="btn btn-sm btn-secondary">&larr; Zpět do katalogu produktů</a>
     </div>
 
-    <!-- Karta hračky -->
+    <!-- Karta položky -->
     <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1.5rem;">
             <div>
-                <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem;" th:text="${product.name}">Dřevěná káča</h1>
-                <p style="color: var(--text-muted); font-size: 1.05rem;" th:text="${product.description}"></p>
+                <span class="sku-code" th:text="${product.code}">KAC-001</span>
+                <h1 style="font-size: 22px; font-weight: 700; color: var(--slate-900); margin: 0.35rem 0;" th:text="${product.name}">Dřevěná káča</h1>
+                <p style="color: var(--slate-600); font-size: 13px; max-width: 600px;" th:text="${product.description}"></p>
                 <div style="margin-top: 0.75rem;">
                     <span th:each="cat : ${product.categories}" class="badge badge-neutral" style="margin-right: 0.35rem;" th:text="${cat.name}"></span>
                 </div>
             </div>
-            <div style="text-align: right; background: #f3f4f6; padding: 1rem; border-radius: 8px;">
-                <div style="font-size: 0.85rem; color: var(--text-muted);">SKU Kód: <strong th:text="${product.code}">KAC-001</strong></div>
-                <div style="font-size: 1.3rem; font-weight: 800; color: var(--primary); margin: 0.25rem 0;" th:text="${product.sellingPrice} + ' Kč'"></div>
-                <div style="font-size: 0.85rem; color: var(--text-muted);">Nákupní cena: <span th:text="${product.purchasePrice} + ' Kč'"></span></div>
-                <div style="font-size: 0.85rem; color: var(--danger); font-weight: 600; margin-top: 0.25rem;">Minimální limit: <span th:text="${product.minStockLimit} + ' ks'"></span></div>
+            <div style="background: var(--slate-50); border: 1px solid var(--slate-200); padding: 1rem 1.25rem; border-radius: var(--radius); min-width: 220px;">
+                <div style="font-size: 12px; color: var(--slate-500);">Katalogová prodejní cena:</div>
+                <div style="font-size: 20px; font-weight: 700; color: var(--slate-900); margin: 0.2rem 0;" class="tabular-num" th:text="${product.sellingPrice} + ' Kč'"></div>
+                <div style="font-size: 12px; color: var(--slate-500); margin-top: 0.35rem;">
+                    Nákupní cena: <strong class="tabular-num" th:text="${product.purchasePrice} + ' Kč'"></strong>
+                </div>
+                <div style="font-size: 12px; color: var(--danger-text); font-weight: 600; margin-top: 0.35rem;">
+                    Bezpečnostní limit: <strong class="tabular-num" th:text="${product.minStockLimit} + ' ks'"></strong>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Stav na skladech -->
+    <!-- Stav zásob dle jednotlivých skladů -->
     <div class="card">
-        <h2 class="card-title">📍 Stav na jednotlivých skladech firmy</h2>
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Disponibilita zásob na skladech</h2>
+                <p class="card-subtitle">Rozpad fyzického stavu, aktivních rezervací v objednávkách a volného množství k prodeji</p>
+            </div>
+        </div>
         <div class="grid-2">
-            <div th:each="si : ${stockItems}" class="kpi-card" style="border: 2px solid var(--border);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong style="font-size: 1.1rem;" th:text="${si.warehouse.name}">Hlavní sklad Hradec Králové</strong>
-                    <span th:if="${si.warehouse.isExpeditionPoint}" class="badge badge-success">Expediční sklad</span>
-                    <span th:if="${!si.warehouse.isExpeditionPoint}" class="badge badge-warning">Sezónní garáž</span>
+            <div th:each="si : ${stockItems}" class="kpi-card" style="border: 1px solid var(--slate-200);">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--slate-100); padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
+                    <strong style="font-size: 14px; color: var(--slate-900);" th:text="${si.warehouse.name}">Hlavní sklad Hradec Králové</strong>
+                    <span th:if="${si.warehouse.isExpeditionPoint}" class="badge badge-success"><span class="status-dot"></span>Expediční sklad</span>
+                    <span th:if="${!si.warehouse.isExpeditionPoint}" class="badge badge-warning"><span class="status-dot"></span>Sezónní sklad</span>
                 </div>
-                <div style="margin: 1rem 0; display: flex; justify-content: space-around; text-align: center;">
+                <div style="margin: 0.75rem 0; display: flex; justify-content: space-around; text-align: center;">
                     <div>
-                        <div style="font-size: 0.85rem; color: var(--text-muted);">Fyzicky na regále</div>
-                        <div style="font-size: 1.8rem; font-weight: 800;" th:text="${si.physicalQuantity}">0</div>
+                        <div style="font-size: 11px; text-transform: uppercase; color: var(--slate-500); font-weight: 600;">Fyzický stav</div>
+                        <div style="font-size: 24px; font-weight: 700; color: var(--slate-800);" class="tabular-num" th:text="${si.physicalQuantity}">0</div>
                     </div>
                     <div>
-                        <div style="font-size: 0.85rem; color: var(--text-muted);">Rezervováno v obj.</div>
-                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent);" th:text="${si.reservedQuantity}">0</div>
+                        <div style="font-size: 11px; text-transform: uppercase; color: var(--slate-500); font-weight: 600;">Rezervováno</div>
+                        <div style="font-size: 24px; font-weight: 700; color: var(--warning);" class="tabular-num" th:text="${si.reservedQuantity}">0</div>
                     </div>
                     <div>
-                        <div style="font-size: 0.85rem; color: var(--text-muted);">Volné k prodeji</div>
-                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--success);" th:text="${si.availableQuantity}">0</div>
+                        <div style="font-size: 11px; text-transform: uppercase; color: var(--slate-500); font-weight: 600;">K dispozici</div>
+                        <div style="font-size: 24px; font-weight: 700; color: var(--success);" class="tabular-num" th:text="${si.availableQuantity}">0</div>
                     </div>
                 </div>
-                <div style="font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 0.5rem;" th:text="${si.warehouse.address}"></div>
+                <div style="font-size: 12px; color: var(--slate-500); border-top: 1px solid var(--slate-100); padding-top: 0.5rem;" th:text="${si.warehouse.address}"></div>
             </div>
         </div>
     </div>
 
-    <!-- Historie pohybů (Odpověď: Proč jich je 17 a ne 20?) -->
+    <!-- Auditní deník pohybů položky -->
     <div class="card">
-        <h2 class="card-title">📜 Historie všech skladových pohybů (Auditní deník)</h2>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
-            Odpovídá na otázku klienta: <em>„Proč jich je sedmnáct a ne dvacet?“</em> a <em>„Kde je ta káča, co jsem ji měl minulý týden?“</em>
-        </p>
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Transakční historie skladových pohybů</h2>
+                <p class="card-subtitle">Úplný auditní záznam veškerých příjmů, výdejů, inventurních dorovnání a meziskladových převodů</p>
+            </div>
+        </div>
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
-                        <th>Čas</th>
-                        <th>Typ pohybu</th>
-                        <th>Odkud</th>
-                        <th>Kam</th>
-                        <th>Množství</th>
-                        <th>Kdo provedl</th>
-                        <th>Poznámka / Důvod</th>
+                        <th>Čas zápisu</th>
+                        <th>Typ operace</th>
+                        <th>Zdrojový sklad</th>
+                        <th>Cílový sklad</th>
+                        <th style="text-align: right;">Množství</th>
+                        <th>Zapsal</th>
+                        <th>Účel / Poznámka</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:if="${#lists.isEmpty(movements)}">
-                        <td colspan="7" style="text-align: center; color: var(--text-muted);">Zatím nebyl zaznamenán žádný pohyb.</td>
+                        <td colspan="7" style="text-align: center; color: var(--slate-500);">U této položky nebyly dosud zaevidovány žádné skladové pohyby.</td>
                     </tr>
                     <tr th:each="m : ${movements}">
-                        <td style="font-size: 0.85rem; color: var(--text-muted);" th:text="${#temporals.format(m.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+                        <td class="tabular-num" style="color: var(--slate-500); font-size: 12px;" th:text="${#temporals.format(m.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
                         <td>
-                            <span th:if="${m.movementType.name() == 'RECEIPT'}" class="badge badge-success">Příjem z výroby</span>
-                            <span th:if="${m.movementType.name() == 'DISPATCH'}" class="badge badge-neutral">Výdej zákazníkovi</span>
-                            <span th:if="${m.movementType.name() == 'TRANSFER'}" class="badge badge-warning">Meziskladový svoz</span>
-                            <span th:if="${m.movementType.name() == 'INVENTORY_CORRECTION'}" class="badge badge-danger">Inventurní úprava</span>
+                            <span th:if="${m.movementType.name() == 'RECEIPT'}" class="badge badge-success"><span class="status-dot"></span>Příjem z výroby</span>
+                            <span th:if="${m.movementType.name() == 'DISPATCH'}" class="badge badge-neutral"><span class="status-dot"></span>Výdej (Expedice)</span>
+                            <span th:if="${m.movementType.name() == 'TRANSFER'}" class="badge badge-warning"><span class="status-dot"></span>Meziskladový převod</span>
+                            <span th:if="${m.movementType.name() == 'INVENTORY_CORRECTION'}" class="badge badge-danger"><span class="status-dot"></span>Inventurní úprava</span>
                         </td>
-                        <td th:text="${m.sourceWarehouse != null ? m.sourceWarehouse.code : 'Truhlárna'}"></td>
-                        <td th:text="${m.targetWarehouse != null ? m.targetWarehouse.code : 'Zákazník'}"></td>
-                        <td><strong th:text="${m.quantity} + ' ks'"></strong></td>
-                        <td th:text="${m.performedBy}"></td>
-                        <td th:text="${m.reasonNote}"></td>
+                        <td th:text="${m.sourceWarehouse != null ? m.sourceWarehouse.name : '—'}"></td>
+                        <td th:text="${m.targetWarehouse != null ? m.targetWarehouse.name : '—'}"></td>
+                        <td style="text-align: right;" class="tabular-num">
+                            <strong th:text="${(m.movementType.name() == 'DISPATCH' ? '-' : '+') + m.quantity + ' ks'}"></strong>
+                        </td>
+                        <td style="color: var(--slate-600);" th:text="${m.performedBy}"></td>
+                        <td style="color: var(--slate-600);" th:text="${m.reasonNote}"></td>
                     </tr>
                 </tbody>
             </table>
