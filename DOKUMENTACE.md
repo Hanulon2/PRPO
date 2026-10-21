@@ -9,7 +9,7 @@
 | **Zvolené zadání** | Zadání B: Sklad pro malý e-shop |
 | **Jméno a příjmení** | Ondřej Hanuš (hanulon2@uhk.cz) |
 | **Repozitář na GitHubu** | [https://github.com/Hanulon2/PRPO](https://github.com/Hanulon2/PRPO) |
-| **Datum poslední úpravy** | 7. 10. 2026 |
+| **Datum poslední úpravy** | 21. 10. 2026 |
 
 ---
 
@@ -17,9 +17,9 @@
 
 Aplikace slouží firmě Dřevěnka s.r.o. vedené Petrem Doležalem, která se zabývá výrobou a prodejem dřevěných hraček. Cílem systému je nahradit stávající nevyhovující evidenci ve sdíleném Excelovém souboru o 400 položkách, který byl otevírán na třech počítačích současně a vedl k závažným provozním chybám. Hlavním problémem klienta byl prodej neexistujícího zboží (*overselling*), kdy e-shop prodal položku, která nebyla skladem, a majitel musel volat zklamaným zákazníkům s omluvou. Systém řeší také evidenci dvou fyzických skladů firmy – hlavního expedičního skladu v Hradci Králové a sezónního skladu v garáži v Třebechovicích, odkud se dosud závozy do Hradce vůbec neevidovaly.
 
-Aplikace eviduje produkty a jejich zatřídění do více kategorií současně (vazba M:N – např. dřevěná káča je v kategorii „pro batolata“ i „dárky do 500 Kč“). Zásadní inovací je oddělení fyzického stavu na regálech od stavu disponibilního (volného k prodeji). Při přijetí objednávky systém provede okamžitou rezervaci zásoby a v případě nedostatku objednávku striktně odmítne. Fyzický odpis proběhne až při expedici balíku. Každá změna zásoby (příjem z truhlárny, výdej zákazníkovi, meziskladový přesun Třebechovice -> Hradec i inventurní dorovnání) je trvale zapsána v auditním deníku pohybů. Na úvodní obrazovce má majitel přehled „Co hoří“ s produkty pod minimální zásobou a měsíční finanční report tržeb po kategoriích.
+Aplikace eviduje produkty a jejich zatřídění do více kategorií současně (vazba M:N – např. dřevěná káča je v kategorii „pro batolata“ i „dárky do 500 Kč“). Zásadní inovací je oddělení fyzického stavu na regálech od stavu disponibilního (volného k prodeji). Při přijetí objednávky systém provede okamžitou rezervaci zásoby a v případě nedostatku objednávku striktně odmítne. Fyzický odpis proběhne až při expedici balíku. Každá změna zásoby (příjem z truhlárny, výdej zákazníkovi, meziskladový přesun Třebechovice -> Hradec i inventurní dorovnání) je trvale zapsána v auditním deníku pohybů. Na úvodní obrazovce má dispečer přehled kritického stavu zásob s produkty pod minimální bezpečnou hranicí a měsíční finanční report tržeb a hrubé marže po kategoriích.
 
-Technicky je systém postaven jako třívrstvá enterprise aplikace v jazyce Java 21 s využitím frameworku Spring Boot 3. Prezentační vrstva využívá Spring MVC a šablonovací engine Thymeleaf s responzivním CSS přizpůsobeným pro ovládání z mobilního telefonu přímo ve skladu. Aplikační vrstva obsahuje servisní služby vynucující striktní byznys pravidla (zákaz záporného stavu, fixace ceny v objednávce, rezervace). Datová vrstva je postavena na Spring Data JPA / Hibernate a relační databázi PostgreSQL 16 provozované v Docker kontejneru. Schéma databáze je verzováno nástrojem Flyway. Celé řešení je plně kontejnerizováno a spustitelné jediným příkazem `docker compose up`.
+Technicky je systém postaven jako třívrstvá enterprise aplikace v jazyce Java 21 s využitím frameworku Spring Boot 3.4.x. Prezentační vrstva využívá Spring MVC a šablonovací engine Thymeleaf s responzivním CSS navrženým ve standardu moderních podnikových WMS/ERP systémů (tabulární čísla, statusové indikátory, monospaced SKU kódy). Aplikační vrstva obsahuje servisní služby vynucující striktní byznys pravidla (zákaz záporného stavu, fixace ceny v objednávce, rezervace). Datová vrstva je postavena na Spring Data JPA / Hibernate a relační databázi PostgreSQL 16 provozované v Docker kontejneru. Schéma databáze je verzováno nástrojem Flyway. Celé řešení je plně kontejnerizováno a spustitelné jediným příkazem `docker compose up`.
 
 ---
 
@@ -36,7 +36,8 @@ Technicky je systém postaven jako třívrstvá enterprise aplikace v jazyce Jav
 | **R7** | Konsolidace expedice ze dvou skladů (Hradec a Třebechovice) | Zákaznická objednávka se expeduje vždy z Hradce Králové; chybějící zboží v Třebechovicích vyvolá interní převodku (svoz dodávkou). | 7. 10. 2026 |
 | **R8** | Fixace jednotkové ceny v položce objednávky (Price Snapshot) | Při vytvoření objednávky se cena zafixuje v položce; budoucí změna ceníku produktů neovlivní již odeslané objednávky. | 7. 10. 2026 |
 | **R9** | Vazba produktů do více kategorií M:N | Produkt může patřit do více kategorií naráz (např. batolata i dárky do 500 Kč) s kategoriovým vykazováním měsíčního obratu. | 7. 10. 2026 |
-| **R10** | Responzivní webové rozhraní (Thymeleaf + CSS) pro mobil ve skladu | Petr Doležal tráví půl dne ve skladu; UI je optimalizováno pro mobil s velkými tlačítky a barevnou indikací („co hoří“). | 7. 10. 2026 |
+| **R10** | Responzivní webové rozhraní (Thymeleaf + CSS) pro mobil ve skladu | Skladník se pohybuje mezi regály; UI je optimalizováno pro mobilní terminály s velkými ovládacími prvky. | 7. 10. 2026 |
+| **R11** | Profesionální podnikový WMS design bez AI prvků a emodži | Odstranění všech emodži a meta-textů; zavedení seriózního podnikového vzhledu (tabulární čísla, statusové indikátory, monospaced SKU kódy). | 21. 10. 2026 |
 
 ---
 
@@ -46,18 +47,20 @@ Technicky je systém postaven jako třívrstvá enterprise aplikace v jazyce Jav
 |---|---|---|---|---|
 | **Z1** | 7. 10. 2026 | „Dvakrát měsíčně prodáme něco, co nemáme na skladě. To se nesmí stávat.“ | Zavedení konceptu disponibilní zásoby a okamžité rezervace; automatické odmítnutí objednávky při nedostatku volných kusů. Viz R5. | hotovo |
 | **Z2** | 7. 10. 2026 | „V garáži stav nikdy nesedí, potřebuju vědět, proč jich je sedmnáct a ne dvacet.“ | Zavedení neměnné tabulky skladových pohybů (`StockMovement`) a modulu inventury pro evidenci manka/přebytku. Viz R6. | hotovo |
-| **Z3** | 7. 10. 2026 | „Potřebuju na úvodní stránce barevně vidět, co hoří a co musím doobjednat.“ | Dashboard s přehledem produktů pod minimálním limitem zásob, barevná vizualizace (červená/oranžová) a rychlá tvorba nákupního požadavku. Viz R10. | hotovo |
+| **Z3** | 7. 10. 2026 | „Potřebuju na úvodní stránce barevně vidět, co hoří a co musím doobjednat.“ | Dispečink s přehledem položek pod bezpečnostním limitem zásob, barevná indikace a rychlé operativní transakce. Viz R10. | hotovo |
 | **Z4** | 7. 10. 2026 | „Ať to jde používat i z mobilu, já jsem půlku dne ve skladu.“ | Responzivní design pro skladové operace (příjem, přesun, inventura) přizpůsobený dotykovému ovládání. Viz R10. | hotovo |
+| **Z5** | 21. 10. 2026 | „Prerobiť visáž stránky aby to vyzeralo že to nie je robené umelou inteligenciou (smajlíky a podobne).“ | Kompletní redesign webového rozhraní na standard profesionálního WMS systému: odstranění všech emodži, zavedení statusových bodových indikátorů, monospaced SKU kódů a tabulárních čísel. Viz R11. | hotovo |
 
 ---
 
 ## 4. Stav implementace funkčního prototypu
 
-V rámci první fáze vývoje byl vytvořen plně funkční a spustitelný prototyp webové aplikace, který je ihned k dispozici pro předvedení klientovi na adrese `http://localhost:8080`:
+V rámci dosavadního vývoje byl vytvořen a odladěn plně funkční a spustitelný prototyp webové aplikace, dostupný na adrese `http://localhost:8080`:
 
-1. **Dashboard (`/`):** Obsahuje widget „🔴 CO HOŘÍ“ zobrazující položky pod minimálním limitem, skladové statistiky, formuláře pro okamžitý příjem a meziskladový závoz dodávkou a auditní deník posledních pohybů.
-2. **Katalog hraček (`/products`, `/products/{id}`):** Zobrazuje produkty, rozpad disponibilní zásoby a na detailu produktu rozpad kusů mezi skladem v Hradci Králové a sezónní garáží v Třebechovicích.
-3. **Sklad a převody (`/warehouse`):** Formulář meziskladového svozu z garáže do expedičního skladu s validací disponibilního množství, formulář pro inventuru a kompletní auditní deník.
-4. **Objednávky a expedice (`/orders`):** Přehled objednávek, simulátor nové objednávky z e-shopu (automatické přepínání do `CONFIRMED`, `WAITING_FOR_TRANSFER` nebo `REJECTED`) a tlačítko pro zabalení a expedici s fyzickým odpisem zásoby.
-5. **Finanční reporting (`/reports`):** Vyhodnocení měsíčního obratu, nákupních nákladů a hrubé marže podle kategorií hraček.
+1. **Skladový a expediční dispečink (`/`):** Zobrazuje klíčové ukazatele (KPI), modul kritického stavu zásob pod bezpečnostním limitem, formuláře pro operativní naskladnění z výroby i meziskladový svoz dodávkou a auditní deník posledních transakcí.
+2. **Katalog produktů (`/products`, `/products/{id}`):** Zobrazuje kompletní sortiment, vyhledávání podle SKU nebo názvu, filtrování dle kategorií (vazba M:N), a na detailu položky rozpad zásob mezi skladem v Hradci Králové a sezónní garáží v Třebechovicích včetně kompletní pohybové historie.
+3. **Skladové hospodářství a převody (`/warehouse`):** Formulář vystavení meziskladové převodky s validací disponibilního množství, formulář pro inventurní vyrovnání manka/přebytku s povinným zdůvodněním a centrální auditní deník.
+4. **Objednávky a expedice (`/orders`):** Přehled objednávek se zafixovanou cenou v době nákupu (Price Snapshot), simulace příchozí objednávky s automatickou rezervací / striktním zamítnutím při nedostatku volné zásoby a tlačítko fyzické expedice balíku.
+5. **Rentabilita a obrat dle kategorií (`/reports`):** Vyhodnocení měsíčního obratu, nákupních nákladů, hrubé marže a podílu jednotlivých kategorií hraček na celkových tržbách.
+
 

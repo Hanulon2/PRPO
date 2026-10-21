@@ -196,7 +196,8 @@ Aplikace bude po naběhnutí dostupná na adrese `http://localhost:8080`.
 | **Fáze 2** | Inicializace Spring Boot 3 projektu (Java 21, Gradle wrapper), Docker Compose s PostgreSQL 16. | **Hotovo** |
 | **Fáze 3** | Implementace doménových entit (`Product`, `Category`, `Warehouse`, `StockItem`, `StockMovement`, `Customer`, `CustomerOrder`, `OrderItem`) a vazby M:N. | **Hotovo** |
 | **Fáze 4** | Implementace servisní vrstvy: disponibilní zásoba, rezervace, svozy dodávkou mezi sklady, odmítnutí při nedostatku a auditní pohybový deník. | **Hotovo** |
-| **Fáze 5** | Webové rozhraní (Thymeleaf + CSS): mobilní rozhraní pro skladníka, dashboard s indikátorem „🔴 CO HOŘÍ“, katalog, správa objednávek a měsíční obrat po kategoriích. | **Hotovo** |
+| **Fáze 5** | Webové rozhraní (Thymeleaf + CSS): profesionální podnikové WMS rozhraní pro skladníka, dispečink s indikátorem kritických zásob, katalog se SKU kódy, správa objednávek a rentabilita po kategoriích (bez AI prvků a emodži). | **Hotovo** |
 | **Fáze 6** | Unit a integrační testy pro ověření povinného minima (`DrevenkaApplicationTests`). | **Hotovo** |
 | **Fáze 7** | Závěrečná validace, multi-stage Dockerfile a prezentace klientovi. | **V běhu** |
+
 
