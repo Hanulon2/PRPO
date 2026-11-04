@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Správa objednávek &amp; Expedice | Dřevěnka WMS</title>
+    <title>Objednávky a expedice | Dřevěnka s.r.o.</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -11,9 +11,8 @@
 <header>
     <div class="header-container">
         <a th:href="@{/}" class="brand">
-            <span class="brand-logo">D</span>
-            <span class="brand-text">DŘEVĚNKA</span>
-            <span class="brand-badge">WMS &bull; Sklad</span>
+            <span class="brand-text">Dřevěnka s.r.o.</span>
+            <span class="brand-badge">Skladová evidence</span>
         </a>
         <nav>
             <a th:href="@{/}">Přehled</a>
@@ -29,8 +28,8 @@
 
     <div class="page-header">
         <div>
-            <h1 class="page-title">Objednávky a expediční stůl</h1>
-            <p class="page-desc">Zpracování příchozích objednávek, alokace zásob a fyzická expedice</p>
+            <h1 class="page-title">Objednávky a expedice</h1>
+            <p class="page-desc">Evidence zákaznických objednávek, rezervace zásob a potvrzování odeslání</p>
         </div>
     </div>
 
@@ -39,35 +38,34 @@
     <div th:if="${warningMessage}" class="alert alert-warning" th:text="${warningMessage}"></div>
     <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-    <!-- Simulace nové objednávky z e-shopu -->
-    <div class="card" style="border-left: 4px solid var(--primary);">
+    <!-- Zápis nové objednávky -->
+    <div class="card">
         <div class="card-header">
             <div>
-                <h2 class="card-title">Příjem nové objednávky z e-shopu (Simulace)</h2>
-                <p class="card-subtitle">Systém provede okamžitou validaci disponibilního stavu na obou skladech a zablokuje přeprodej</p>
+                <h2 class="card-title">Zadat novou objednávku</h2>
+                <p class="card-subtitle">Při vytvoření objednávky systém ověří dostupnou zásobu a zarezervuje požadované kusy</p>
             </div>
-            <span class="badge badge-primary">Automatická rezervace zásob</span>
         </div>
 
         <form th:action="@{/orders/simulate}" method="post" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-end;">
             <div style="flex: 1; min-width: 200px;">
-                <label class="form-label">Zákazník:</label>
+                <label class="form-label">Zákazník</label>
                 <select name="customerId" class="form-control" required>
                     <option th:each="c : ${customers}" th:value="${c.id}" th:text="${c.name} + ' (' + ${c.email} + ')'"></option>
                 </select>
             </div>
             <div style="flex: 2; min-width: 240px;">
-                <label class="form-label">Objednaná položka:</label>
+                <label class="form-label">Produkt</label>
                 <select name="productId" class="form-control" required>
-                    <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name} + ' — ' + ${p.sellingPrice} + ' Kč'"></option>
+                    <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name} + ' – ' + ${p.sellingPrice} + ' Kč'"></option>
                 </select>
             </div>
             <div style="width: 100px;">
-                <label class="form-label">Počet kusů:</label>
+                <label class="form-label">Množství (ks)</label>
                 <input type="number" name="quantity" class="form-control" min="1" value="2" required>
             </div>
-            <div style="min-width: 160px;">
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Zadat objednávku</button>
+            <div style="min-width: 150px;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Vytvořit objednávku</button>
             </div>
         </form>
     </div>
@@ -76,8 +74,8 @@
     <div class="card">
         <div class="card-header">
             <div>
-                <h2 class="card-title">Evidence objednávek</h2>
-                <p class="card-subtitle">Seznam objednávek s fixovanou cenou v době nákupu (Price Snapshot)</p>
+                <h2 class="card-title">Přehled objednávek</h2>
+                <p class="card-subtitle">Ceny položek jsou uloženy podle ceníku platného v okamžiku objednání</p>
             </div>
             <span class="badge badge-neutral" th:text="'Celkem: ' + ${#lists.size(orders)}"></span>
         </div>
@@ -86,13 +84,13 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Číslo dokladu</th>
-                        <th>Odběratel</th>
-                        <th>Datum a čas</th>
-                        <th>Stav vyřízení</th>
-                        <th>Položky (cena fixována)</th>
-                        <th style="text-align: right;">Celková cena</th>
-                        <th style="text-align: center;">Expedice</th>
+                        <th>Číslo objednávky</th>
+                        <th>Zákazník</th>
+                        <th>Datum přijetí</th>
+                        <th>Stav</th>
+                        <th>Položky</th>
+                        <th style="text-align: right;">Celkem</th>
+                        <th style="text-align: center;">Akce</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -100,20 +98,20 @@
                         <td><span class="sku-code" th:text="${o.orderNumber}">OBJ-2026-0001</span></td>
                         <td>
                             <strong th:text="${o.customer.name}">Jan Novák</strong>
-                            <div style="font-size: 12px; color: var(--slate-500);" th:text="${o.customer.phone}"></div>
+                            <div style="font-size: 12px; color: var(--slate-600);" th:text="${o.customer.phone}"></div>
                         </td>
-                        <td class="tabular-num" style="font-size: 12px; color: var(--slate-500);" th:text="${#temporals.format(o.orderDate, 'dd.MM.yyyy HH:mm')}"></td>
+                        <td class="tabular-num" style="font-size: 12px; color: var(--slate-600);" th:text="${#temporals.format(o.orderDate, 'dd.MM.yyyy HH:mm')}"></td>
                         <td>
-                            <span th:if="${o.status.name() == 'CONFIRMED'}" class="badge badge-success"><span class="status-dot"></span>K expedici v Hradci</span>
-                            <span th:if="${o.status.name() == 'WAITING_FOR_TRANSFER'}" class="badge badge-warning"><span class="status-dot"></span>Čeká na svoz z garáže</span>
-                            <span th:if="${o.status.name() == 'SHIPPED'}" class="badge badge-neutral"><span class="status-dot"></span>Odesláno (Expedováno)</span>
-                            <span th:if="${o.status.name() == 'REJECTED'}" class="badge badge-danger"><span class="status-dot"></span>Zamítnuto (Nedostatek zásob)</span>
-                            <span th:if="${o.status.name() == 'CANCELLED'}" class="badge badge-neutral"><span class="status-dot"></span>Stornováno</span>
-                            <div style="font-size: 11px; color: var(--slate-500); margin-top: 3px;" th:text="${o.note}"></div>
+                            <span th:if="${o.status.name() == 'CONFIRMED'}" class="badge badge-success">Připraveno k expedici</span>
+                            <span th:if="${o.status.name() == 'WAITING_FOR_TRANSFER'}" class="badge badge-warning">Čeká na svoz ze skladu</span>
+                            <span th:if="${o.status.name() == 'SHIPPED'}" class="badge badge-neutral">Vyexpedováno</span>
+                            <span th:if="${o.status.name() == 'REJECTED'}" class="badge badge-danger">Zamítnuto (nedostatek zásob)</span>
+                            <span th:if="${o.status.name() == 'CANCELLED'}" class="badge badge-neutral">Stornováno</span>
+                            <div style="font-size: 11px; color: var(--slate-600); margin-top: 3px;" th:text="${o.note}"></div>
                         </td>
                         <td>
                             <div th:each="item : ${o.items}" style="font-size: 12px; margin-bottom: 2px;">
-                                <strong th:text="${item.product.name}">Káča</strong>: 
+                                <strong th:text="${item.product.name}">Káča</strong>:
                                 <span class="tabular-num" th:text="${item.quantity} + ' ks &times; ' + ${item.unitPrice} + ' Kč'"></span>
                             </div>
                         </td>
@@ -122,13 +120,13 @@
                         </td>
                         <td style="text-align: center;">
                             <form th:if="${o.status.name() == 'CONFIRMED'}" th:action="@{/orders/{id}/ship(id=${o.id})}" method="post">
-                                <button type="submit" class="btn btn-sm btn-primary">Expedovat balík &rarr;</button>
+                                <button type="submit" class="btn btn-sm btn-primary">Potvrdit odeslání</button>
                             </form>
                             <span th:if="${o.status.name() == 'WAITING_FOR_TRANSFER'}" style="font-size: 11px; color: var(--warning-text); font-weight: 600;">
-                                Nutný svoz dodávkou
+                                Nutný převod do HK
                             </span>
-                            <span th:if="${o.status.name() == 'SHIPPED'}" style="font-size: 11px; color: var(--slate-400);">
-                                Dokončeno
+                            <span th:if="${o.status.name() == 'SHIPPED'}" style="font-size: 11px; color: var(--slate-500);">
+                                Uzavřeno
                             </span>
                             <span th:if="${o.status.name() == 'REJECTED'}" style="font-size: 11px; color: var(--danger-text);">
                                 Bez výdeje
@@ -141,6 +139,13 @@
     </div>
 
 </main>
+
+<footer>
+    <div class="footer-container">
+        <span>Dřevěnka s.r.o. – Výroba a prodej dřevěných hraček</span>
+        <span>Sklady: Hradec Králové (expedice) | Třebechovice pod Orebem (sezónní sklad)</span>
+    </div>
+</footer>
 
 </body>
 </html>

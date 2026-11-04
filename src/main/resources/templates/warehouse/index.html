@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skladové hospodářství &amp; Převody | Dřevěnka WMS</title>
+    <title>Sklady a převody | Dřevěnka s.r.o.</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -11,9 +11,8 @@
 <header>
     <div class="header-container">
         <a th:href="@{/}" class="brand">
-            <span class="brand-logo">D</span>
-            <span class="brand-text">DŘEVĚNKA</span>
-            <span class="brand-badge">WMS &bull; Sklad</span>
+            <span class="brand-text">Dřevěnka s.r.o.</span>
+            <span class="brand-badge">Skladová evidence</span>
         </a>
         <nav>
             <a th:href="@{/}">Přehled</a>
@@ -30,7 +29,7 @@
     <div class="page-header">
         <div>
             <h1 class="page-title">Skladové hospodářství a převody</h1>
-            <p class="page-desc">Řízení meziskladové logistiky, inventurní vyrovnání a auditní přehled pohybů</p>
+            <p class="page-desc">Meziskladové přesuny, inventurní korekce a kniha skladových pohybů</p>
         </div>
     </div>
 
@@ -43,39 +42,39 @@
         <div class="card">
             <div class="card-header">
                 <div>
-                    <h2 class="card-title">Vystavení meziskladové převodky</h2>
-                    <p class="card-subtitle">Přesun zboží ze sezónního skladu v Třebechovicích do expedičního skladu v Hradci Králové</p>
+                    <h2 class="card-title">Meziskladová převodka</h2>
+                    <p class="card-subtitle">Přesun zásob mezi Třebechovicemi pod Orebem a Hradcem Králové</p>
                 </div>
             </div>
             <form th:action="@{/warehouse/transfer}" method="post">
                 <div class="form-group">
-                    <label class="form-label">Skladová položka:</label>
+                    <label class="form-label">Skladová položka</label>
                     <select name="productId" class="form-control" required>
                         <option value="">-- Vyberte produkt --</option>
                         <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name} + ' (' + ${p.code} + ')'"></option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Zdrojový sklad (výdej):</label>
+                    <label class="form-label">Výdej ze skladu</label>
                     <select name="sourceWarehouseId" class="form-control" required>
                         <option th:each="w : ${warehouses}" th:value="${w.id}" th:text="${w.name}" th:selected="${w.code == 'TREBECHOVICE'}"></option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Cílový sklad (příjem):</label>
+                    <label class="form-label">Příjem na sklad</label>
                     <select name="targetWarehouseId" class="form-control" required>
                         <option th:each="w : ${warehouses}" th:value="${w.id}" th:text="${w.name}" th:selected="${w.code == 'HRADEC'}"></option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Počet kusů k převozu:</label>
+                    <label class="form-label">Počet kusů</label>
                     <input type="number" name="quantity" class="form-control" min="1" value="10" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Interní poznámka k závozu:</label>
-                    <input type="text" name="note" class="form-control" placeholder="Např. Pravidelný páteční svoz dodávkou">
+                    <label class="form-label">Poznámka k převodu</label>
+                    <input type="text" name="note" class="form-control" placeholder="Např. Pravidelný závoz dodávkou">
                 </div>
-                <button type="submit" class="btn btn-accent" style="width: 100%;">Zaznamenat převodku</button>
+                <button type="submit" class="btn btn-accent" style="width: 100%;">Zapsat převodku</button>
             </form>
         </div>
 
@@ -83,33 +82,33 @@
         <div class="card">
             <div class="card-header">
                 <div>
-                    <h2 class="card-title">Inventurní protokol a narovnání</h2>
-                    <p class="card-subtitle">Záznam fyzické inventury s povinným zdůvodněním manka nebo přebytku</p>
+                    <h2 class="card-title">Inventurní korekce stavu</h2>
+                    <p class="card-subtitle">Úprava evidenčního množství podle fyzického přepočtení na regále</p>
                 </div>
             </div>
             <form th:action="@{/warehouse/inventory}" method="post">
                 <div class="form-group">
-                    <label class="form-label">Skladová položka:</label>
+                    <label class="form-label">Skladová položka</label>
                     <select name="productId" class="form-control" required>
                         <option value="">-- Vyberte produkt --</option>
                         <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name} + ' (' + ${p.code} + ')'"></option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Inventarizovaný sklad:</label>
+                    <label class="form-label">Sklad</label>
                     <select name="warehouseId" class="form-control" required>
                         <option th:each="w : ${warehouses}" th:value="${w.id}" th:text="${w.name}"></option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Skutečně zjištěný fyzický stav na regále (ks):</label>
-                    <input type="number" name="newQuantity" class="form-control" min="0" placeholder="Zadejte reálný počet kusů" required>
+                    <label class="form-label">Skutečně zjištěný stav (ks)</label>
+                    <input type="number" name="newQuantity" class="form-control" min="0" placeholder="Zadejte zjištěný počet kusů" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Důvod inventurní odchylky:</label>
-                    <input type="text" name="reason" class="form-control" placeholder="Např. Poškození při manipulaci, nalezená nerozbalená krabice" required>
+                    <label class="form-label">Důvod úpravy</label>
+                    <input type="text" name="reason" class="form-control" placeholder="Např. Poškozený kus, nalezená krabice při inventuře" required>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Provést inventurní narovnání</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Uložit inventurní korekci</button>
             </form>
         </div>
     </div>
@@ -118,36 +117,36 @@
     <div class="card">
         <div class="card-header">
             <div>
-                <h2 class="card-title">Centrální auditní deník skladových pohybů</h2>
-                <p class="card-subtitle">Neměnná transakční historie veškerých pohybů zásob napříč všemi sklady</p>
+                <h2 class="card-title">Kniha skladových pohybů</h2>
+                <p class="card-subtitle">Úplná historie příjmů, výdejů, převodů a inventur</p>
             </div>
-            <span class="badge badge-neutral" th:text="'Záznamů: ' + ${#lists.size(movements)}"></span>
+            <span class="badge badge-neutral" th:text="'Počet záznamů: ' + ${#lists.size(movements)}"></span>
         </div>
 
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Čas zápisu</th>
-                        <th>Typ operace</th>
-                        <th>Produkt</th>
+                        <th>Doklad</th>
+                        <th>Datum a čas</th>
+                        <th>Operace</th>
+                        <th>Položka</th>
                         <th>Zdrojový sklad</th>
                         <th>Cílový sklad</th>
                         <th style="text-align: right;">Množství</th>
-                        <th>Odpovědná osoba</th>
-                        <th>Důvod / Účel pohybu</th>
+                        <th>Zapsal</th>
+                        <th>Poznámka</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="m : ${movements}">
-                        <td class="tabular-num" style="color: var(--slate-400); font-size: 11px;" th:text="'#' + ${m.id}"></td>
-                        <td class="tabular-num" style="font-size: 12px; color: var(--slate-500);" th:text="${#temporals.format(m.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+                        <td class="tabular-num" style="color: var(--slate-500); font-size: 12px;" th:text="'#' + ${m.id}"></td>
+                        <td class="tabular-num" style="font-size: 12px; color: var(--slate-600);" th:text="${#temporals.format(m.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
                         <td>
-                            <span th:if="${m.movementType.name() == 'RECEIPT'}" class="badge badge-success"><span class="status-dot"></span>Příjem</span>
-                            <span th:if="${m.movementType.name() == 'DISPATCH'}" class="badge badge-neutral"><span class="status-dot"></span>Výdej</span>
-                            <span th:if="${m.movementType.name() == 'TRANSFER'}" class="badge badge-warning"><span class="status-dot"></span>Přesun</span>
-                            <span th:if="${m.movementType.name() == 'INVENTORY_CORRECTION'}" class="badge badge-danger"><span class="status-dot"></span>Inventura</span>
+                            <span th:if="${m.movementType.name() == 'RECEIPT'}" class="badge badge-success">Příjem</span>
+                            <span th:if="${m.movementType.name() == 'DISPATCH'}" class="badge badge-neutral">Výdej</span>
+                            <span th:if="${m.movementType.name() == 'TRANSFER'}" class="badge badge-warning">Převod</span>
+                            <span th:if="${m.movementType.name() == 'INVENTORY_CORRECTION'}" class="badge badge-danger">Inventura</span>
                         </td>
                         <td><strong th:text="${m.product.name}">Produkt</strong></td>
                         <td th:text="${m.sourceWarehouse != null ? m.sourceWarehouse.name : '—'}"></td>
@@ -164,6 +163,13 @@
     </div>
 
 </main>
+
+<footer>
+    <div class="footer-container">
+        <span>Dřevěnka s.r.o. – Výroba a prodej dřevěných hraček</span>
+        <span>Sklady: Hradec Králové (expedice) | Třebechovice pod Orebem (sezónní sklad)</span>
+    </div>
+</footer>
 
 </body>
 </html>

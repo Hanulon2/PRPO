@@ -1,47 +1,51 @@
 :root {
-    --primary: #0f766e;
-    --primary-hover: #115e59;
-    --primary-light: #f0fdfa;
-    --primary-border: #99f6e4;
-    
-    --slate-900: #0f172a;
-    --slate-800: #1e293b;
-    --slate-700: #334155;
-    --slate-600: #475569;
-    --slate-500: #64748b;
-    --slate-400: #94a3b8;
-    --slate-200: #e2e8f0;
-    --slate-100: #f1f5f9;
-    --slate-50:  #f8fafc;
-    
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-    
-    --danger: #dc2626;
-    --danger-bg: #fef2f2;
-    --danger-border: #fecaca;
-    --danger-text: #991b1b;
-    
-    --warning: #d97706;
-    --warning-bg: #fffbeb;
-    --warning-border: #fde68a;
-    --warning-text: #92400e;
-    
-    --success: #16a34a;
-    --success-bg: #f0fdf4;
-    --success-border: #bbf7d0;
-    --success-text: #166534;
-    
-    --neutral-bg: #f1f5f9;
-    --neutral-border: #cbd5e1;
-    --neutral-text: #334155;
-    
-    --radius-sm: 4px;
-    --radius: 6px;
-    --radius-lg: 8px;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    /* Přírodní dřevěná a řemeslná ERP paleta (Dřevěnka s.r.o.) */
+    --primary: #8c3d19;
+    --primary-hover: #6e2e10;
+    --primary-light: #fdf6f0;
+    --primary-border: #e6ccb8;
+
+    --walnut-900: #231b16;
+    --walnut-800: #332821;
+    --walnut-700: #473930;
+
+    --slate-900: #1f1b18;
+    --slate-800: #2e2925;
+    --slate-700: #453f3a;
+    --slate-600: #5c544e;
+    --slate-500: #786f67;
+    --slate-400: #9c9288;
+    --slate-300: #c7bfb5;
+    --slate-200: #ded8ce;
+    --slate-100: #efeae2;
+    --slate-50:  #f6f3ee;
+
+    --accent: #364935;
+    --accent-hover: #273726;
+
+    --danger: #b91c1c;
+    --danger-bg: #fcf2f2;
+    --danger-border: #f2c9c9;
+    --danger-text: #881313;
+
+    --warning: #b45309;
+    --warning-bg: #fdf8ed;
+    --warning-border: #f0d8a8;
+    --warning-text: #7c3706;
+
+    --success: #2b6cb0;
+    --success-bg: #f2f7ec;
+    --success-border: #c5dec0;
+    --success-text: #22543d;
+
+    --neutral-bg: #efeae2;
+    --neutral-border: #d5cfc4;
+    --neutral-text: #3d3732;
+
+    --radius-sm: 2px;
+    --radius: 4px;
+    --radius-lg: 4px;
+    --shadow-sm: 0 1px 2px rgba(35, 27, 22, 0.06);
 }
 
 * {
@@ -51,115 +55,109 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
     background-color: var(--slate-50);
     color: var(--slate-800);
-    line-height: 1.5;
+    line-height: 1.45;
     font-size: 14px;
-    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Header & Top Navigation */
+/* Horní lišta a navigace */
 header {
-    background-color: var(--slate-900);
-    border-bottom: 1px solid var(--slate-700);
-    color: #ffffff;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    background-color: var(--walnut-900);
+    border-bottom: 3px solid var(--primary);
+    color: #f8f5f0;
 }
 
 .header-container {
-    max-width: 1240px;
+    max-width: 1260px;
     margin: 0 auto;
-    padding: 0 1.25rem;
-    height: 60px;
+    padding: 0 1.5rem;
+    height: 54px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
 }
 
 .brand {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.65rem;
     text-decoration: none;
-    color: #ffffff;
+    color: #f8f5f0;
 }
 
 .brand-logo {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    background-color: var(--primary);
-    color: white;
-    font-weight: 700;
-    font-size: 14px;
-    border-radius: var(--radius-sm);
-    letter-spacing: 0.5px;
+    display: none;
 }
 
 .brand-text {
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: -0.2px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
     color: #ffffff;
 }
 
 .brand-badge {
-    background-color: var(--slate-800);
-    border: 1px solid var(--slate-700);
-    color: var(--slate-400);
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: var(--radius-sm);
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
+    border-left: 1px solid var(--walnut-700);
+    color: #b5a89d;
+    font-size: 12px;
+    padding-left: 0.65rem;
+    font-weight: 400;
 }
 
 nav {
     display: flex;
-    align-items: center;
-    gap: 0.25rem;
+    align-items: stretch;
+    gap: 0.15rem;
 }
 
 nav a {
-    color: var(--slate-400);
+    display: inline-flex;
+    align-items: center;
+    color: #cbbeb3;
     text-decoration: none;
-    padding: 0.5rem 0.85rem;
-    border-radius: var(--radius);
+    padding: 0 0.95rem;
     font-size: 13px;
     font-weight: 500;
-    transition: color 0.15s ease, background-color 0.15s ease;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+    transition: color 0.12s ease, background-color 0.12s ease, border-color 0.12s ease;
 }
 
 nav a:hover {
     color: #ffffff;
-    background-color: var(--slate-800);
+    background-color: var(--walnut-800);
 }
 
 nav a.active {
     color: #ffffff;
-    background-color: var(--slate-800);
+    background-color: var(--walnut-800);
+    border-bottom-color: #d97724;
     font-weight: 600;
 }
 
-/* Main Container */
+/* Hlavní kontejner */
 .container {
-    max-width: 1240px;
-    margin: 1.75rem auto;
-    padding: 0 1.25rem;
+    max-width: 1260px;
+    width: 100%;
+    margin: 1.5rem auto 2.5rem;
+    padding: 0 1.5rem;
+    flex: 1;
 }
 
-/* Page Header & Breadcrumbs */
+/* Záhlaví stránky */
 .page-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
+    align-items: flex-end;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--slate-200);
     flex-wrap: wrap;
     gap: 1rem;
 }
@@ -168,65 +166,66 @@ nav a.active {
     font-size: 20px;
     font-weight: 700;
     color: var(--slate-900);
-    letter-spacing: -0.3px;
 }
 
 .page-desc {
     font-size: 13px;
-    color: var(--slate-500);
+    color: var(--slate-600);
     margin-top: 2px;
 }
 
-/* Alerts */
+/* Upozornění */
 .alert {
-    padding: 0.85rem 1.15rem;
+    padding: 0.75rem 1rem;
     border-radius: var(--radius);
     margin-bottom: 1.25rem;
     font-size: 13px;
     font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    border-left: 4px solid transparent;
 }
 
 .alert-success {
     background: var(--success-bg);
     color: var(--success-text);
     border: 1px solid var(--success-border);
+    border-left: 4px solid #2f855a;
 }
 
 .alert-warning {
     background: var(--warning-bg);
     color: var(--warning-text);
     border: 1px solid var(--warning-border);
+    border-left: 4px solid var(--warning);
 }
 
 .alert-danger {
     background: var(--danger-bg);
     color: var(--danger-text);
     border: 1px solid var(--danger-border);
+    border-left: 4px solid var(--danger);
 }
 
-/* KPI Cards Grid */
+/* Mřížka přehledových boxů */
 .grid-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
-    margin-bottom: 1.5rem;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .grid-2 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 
 .kpi-card {
     background: #ffffff;
-    border-radius: var(--radius-lg);
-    padding: 1.25rem 1.5rem;
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
     border: 1px solid var(--slate-200);
+    border-top: 3px solid var(--walnut-700);
     box-shadow: var(--shadow-sm);
     display: flex;
     flex-direction: column;
@@ -242,60 +241,58 @@ nav a.active {
 .kpi-label {
     font-size: 12px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--slate-500);
+    color: var(--slate-600);
 }
 
 .kpi-value {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
     color: var(--slate-900);
     line-height: 1.2;
-    margin: 0.35rem 0;
+    margin: 0.3rem 0;
     font-variant-numeric: tabular-nums;
 }
 
 .kpi-sub {
     font-size: 12px;
     color: var(--slate-500);
+    border-top: 1px solid var(--slate-100);
+    padding-top: 0.4rem;
+    margin-top: 0.2rem;
 }
 
-/* Cards */
+/* Panely a sekce */
 .card {
     background: #ffffff;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     border: 1px solid var(--slate-200);
     box-shadow: var(--shadow-sm);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
 }
 
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 1rem;
-    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
     border-bottom: 1px solid var(--slate-200);
 }
 
 .card-title {
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--slate-900);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
 }
 
 .card-subtitle {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--slate-500);
     margin-top: 2px;
 }
 
-/* Critical Stock Section */
+/* Sekce podlimitních zásob */
 .urgent-box {
     border-left: 4px solid var(--danger);
 }
@@ -304,23 +301,22 @@ nav a.active {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.85rem 1rem;
-    background: var(--slate-50);
+    padding: 0.65rem 0.9rem;
+    background: #faf8f5;
     border: 1px solid var(--slate-200);
-    border-radius: var(--radius);
-    margin-bottom: 0.5rem;
-    transition: background 0.15s ease;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.45rem;
 }
 
 .urgent-item:hover {
-    background: #ffffff;
+    background: var(--slate-100);
 }
 
-/* Tables */
+/* Tabulky */
 .table-responsive {
     overflow-x: auto;
     border: 1px solid var(--slate-200);
-    border-radius: var(--radius);
+    border-radius: var(--radius-sm);
 }
 
 table {
@@ -332,26 +328,29 @@ table {
 }
 
 th, td {
-    padding: 0.75rem 1rem;
+    padding: 0.6rem 0.85rem;
     border-bottom: 1px solid var(--slate-200);
 }
 
 th {
-    background-color: var(--slate-50);
+    background-color: var(--slate-100);
     font-weight: 600;
-    color: var(--slate-600);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: var(--slate-700);
+    font-size: 12px;
+    border-bottom: 2px solid var(--slate-300);
     white-space: nowrap;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #fbfaf7;
+}
+
+tbody tr:hover {
+    background-color: #f2ede4;
 }
 
 tr:last-child td {
     border-bottom: none;
-}
-
-tbody tr:hover {
-    background-color: var(--slate-50);
 }
 
 .tabular-num {
@@ -359,33 +358,28 @@ tbody tr:hover {
 }
 
 .sku-code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-family: Consolas, "Liberation Mono", Menlo, monospace;
     font-size: 12px;
     background-color: var(--slate-100);
-    color: var(--slate-700);
-    padding: 2px 6px;
+    color: var(--slate-800);
+    padding: 1px 6px;
     border-radius: var(--radius-sm);
-    border: 1px solid var(--slate-200);
+    border: 1px solid var(--slate-300);
 }
 
-/* Badges & Status Pills */
+/* Štítky stavů (bez kulatých AI teček) */
 .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 3px 8px;
-    border-radius: 9999px;
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: var(--radius-sm);
     font-size: 11px;
     font-weight: 600;
-    line-height: 1;
+    line-height: 1.3;
     white-space: nowrap;
 }
 
 .status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    display: inline-block;
+    display: none;
 }
 
 .badge-danger {
@@ -393,28 +387,24 @@ tbody tr:hover {
     color: var(--danger-text);
     border: 1px solid var(--danger-border);
 }
-.badge-danger .status-dot { background-color: var(--danger); }
 
 .badge-warning {
     background: var(--warning-bg);
     color: var(--warning-text);
     border: 1px solid var(--warning-border);
 }
-.badge-warning .status-dot { background-color: var(--warning); }
 
 .badge-success {
     background: var(--success-bg);
     color: var(--success-text);
     border: 1px solid var(--success-border);
 }
-.badge-success .status-dot { background-color: var(--success); }
 
 .badge-neutral {
     background: var(--neutral-bg);
     color: var(--neutral-text);
     border: 1px solid var(--neutral-border);
 }
-.badge-neutral .status-dot { background-color: var(--slate-400); }
 
 .badge-primary {
     background: var(--primary-light);
@@ -422,26 +412,27 @@ tbody tr:hover {
     border: 1px solid var(--primary-border);
 }
 
-/* Buttons */
+/* Tlačítka */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.4rem;
-    padding: 0.5rem 0.95rem;
+    gap: 0.35rem;
+    padding: 0.45rem 0.9rem;
     border-radius: var(--radius);
     font-size: 13px;
     font-weight: 600;
     border: 1px solid transparent;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.15s ease;
+    transition: background-color 0.12s ease, border-color 0.12s ease;
     line-height: 1.3;
 }
 
 .btn-primary {
     background-color: var(--primary);
     color: #ffffff;
+    border-color: #733011;
 }
 .btn-primary:hover {
     background-color: var(--primary-hover);
@@ -449,36 +440,36 @@ tbody tr:hover {
 
 .btn-secondary {
     background-color: #ffffff;
-    border-color: var(--slate-200);
-    color: var(--slate-700);
+    border-color: var(--slate-300);
+    color: var(--slate-800);
 }
 .btn-secondary:hover {
-    background-color: var(--slate-50);
-    border-color: var(--slate-300);
-    color: var(--slate-900);
+    background-color: var(--slate-100);
+    border-color: var(--slate-400);
 }
 
 .btn-accent {
-    background-color: var(--slate-800);
+    background-color: var(--accent);
     color: #ffffff;
+    border-color: #273726;
 }
 .btn-accent:hover {
-    background-color: var(--slate-900);
+    background-color: var(--accent-hover);
 }
 
 .btn-sm {
-    padding: 0.35rem 0.65rem;
+    padding: 0.3rem 0.65rem;
     font-size: 12px;
 }
 
-/* Forms */
+/* Formuláře */
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
 }
 
 .form-label {
     display: block;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.3rem;
     font-weight: 600;
     font-size: 12px;
     color: var(--slate-700);
@@ -486,27 +477,26 @@ tbody tr:hover {
 
 .form-control {
     width: 100%;
-    padding: 0.5rem 0.75rem;
-    border-radius: var(--radius);
-    border: 1px solid var(--slate-200);
+    padding: 0.45rem 0.65rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--slate-300);
     font-size: 13px;
     color: var(--slate-900);
     background-color: #ffffff;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .form-control:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+    box-shadow: 0 0 0 2px rgba(140, 61, 25, 0.15);
 }
 
 .form-box {
-    background-color: var(--slate-50);
+    background-color: #faf8f5;
     border: 1px solid var(--slate-200);
     border-radius: var(--radius);
-    padding: 1rem;
-    margin-bottom: 1rem;
+    padding: 0.9rem;
+    margin-bottom: 0.85rem;
 }
 
 .form-box-title {
@@ -516,11 +506,11 @@ tbody tr:hover {
     margin-bottom: 0.5rem;
 }
 
-/* Progress bar */
+/* Ukazatel podílu */
 .progress-bar {
-    height: 6px;
+    height: 8px;
     background: var(--slate-200);
-    border-radius: 9999px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
 }
 
@@ -529,7 +519,26 @@ tbody tr:hover {
     background-color: var(--primary);
 }
 
-/* Responsive */
+/* Zápatí */
+footer {
+    border-top: 1px solid var(--slate-200);
+    background-color: var(--slate-100);
+    color: var(--slate-600);
+    font-size: 12px;
+    padding: 0.85rem 1.5rem;
+    margin-top: auto;
+}
+
+.footer-container {
+    max-width: 1260px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Responzivita */
 @media (max-width: 900px) {
     .grid-3 { grid-template-columns: 1fr; }
     .grid-2 { grid-template-columns: 1fr; }
@@ -538,17 +547,19 @@ tbody tr:hover {
 @media (max-width: 768px) {
     .header-container {
         height: auto;
-        padding: 0.75rem 1rem;
+        padding: 0.65rem 1rem;
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.75rem;
+        gap: 0.5rem;
     }
     nav {
         width: 100%;
         overflow-x: auto;
-        padding-bottom: 4px;
+    }
+    nav a {
+        padding: 0.45rem 0.7rem;
     }
     .kpi-value {
-        font-size: 26px;
+        font-size: 24px;
     }
 }

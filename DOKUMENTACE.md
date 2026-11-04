@@ -7,9 +7,9 @@
 |---|---|
 | **Název projektu** | Skladový a objednávkový systém Dřevěnka |
 | **Zvolené zadání** | Zadání B: Sklad pro malý e-shop |
-| **Jméno a příjmení** | Ondřej Hanuš (hanulon2@uhk.cz) |
+| **Jméno a příjmení** | Ondrej Hanuliak (hanulon2@uhk.cz) |
 | **Repozitář na GitHubu** | [https://github.com/Hanulon2/PRPO](https://github.com/Hanulon2/PRPO) |
-| **Datum poslední úpravy** | 21. 10. 2026 |
+| **Datum poslední úpravy** | 4. 11. 2026 |
 
 ---
 
@@ -38,6 +38,7 @@ Technicky je systém postaven jako třívrstvá enterprise aplikace v jazyce Jav
 | **R9** | Vazba produktů do více kategorií M:N | Produkt může patřit do více kategorií naráz (např. batolata i dárky do 500 Kč) s kategoriovým vykazováním měsíčního obratu. | 7. 10. 2026 |
 | **R10** | Responzivní webové rozhraní (Thymeleaf + CSS) pro mobil ve skladu | Skladník se pohybuje mezi regály; UI je optimalizováno pro mobilní terminály s velkými ovládacími prvky. | 7. 10. 2026 |
 | **R11** | Profesionální podnikový WMS design bez AI prvků a emodži | Odstranění všech emodži a meta-textů; zavedení seriózního podnikového vzhledu (tabulární čísla, statusové indikátory, monospaced SKU kódy). | 21. 10. 2026 |
+| **R12** | Přírodní dřevitá firemní identita UI a odstranění generických SaaS prvků | Nahrazení studených SaaS barev, kulatých stavových teček a generického loga teplou paletou dřeva (tmavý ořech, okrová, pergamenový podklad), hranatými štítky a firemním zápatím. | 4. 11. 2026 |
 
 ---
 
@@ -50,6 +51,7 @@ Technicky je systém postaven jako třívrstvá enterprise aplikace v jazyce Jav
 | **Z3** | 7. 10. 2026 | „Potřebuju na úvodní stránce barevně vidět, co hoří a co musím doobjednat.“ | Dispečink s přehledem položek pod bezpečnostním limitem zásob, barevná indikace a rychlé operativní transakce. Viz R10. | hotovo |
 | **Z4** | 7. 10. 2026 | „Ať to jde používat i z mobilu, já jsem půlku dne ve skladu.“ | Responzivní design pro skladové operace (příjem, přesun, inventura) přizpůsobený dotykovému ovládání. Viz R10. | hotovo |
 | **Z5** | 21. 10. 2026 | „Prerobiť visáž stránky aby to vyzeralo že to nie je robené umelou inteligenciou (smajlíky a podobne).“ | Kompletní redesign webového rozhraní na standard profesionálního WMS systému: odstranění všech emodži, zavedení statusových bodových indikátorů, monospaced SKU kódů a tabulárních čísel. Viz R11. | hotovo |
+| **Z6** | 4. 11. 2026 | „Môžeš troška upraviť vzhľad tej stránky akože nechcem tam ani smajlíky proste aby to nevyzeralo ako robené AI len nech to neni také nijaké.“ | Úprava barevného schématu do přírodních dřevitých tónů, zavedení pruhovaných tabulek, hranatých stavových štítků bez teček, přirozené terminologie a firemního zápatí. Viz R12. | hotovo |
 
 ---
 

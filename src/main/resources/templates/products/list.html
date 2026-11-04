@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog produktů | Dřevěnka WMS</title>
+    <title>Katalog produktů | Dřevěnka s.r.o.</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -11,9 +11,8 @@
 <header>
     <div class="header-container">
         <a th:href="@{/}" class="brand">
-            <span class="brand-logo">D</span>
-            <span class="brand-text">DŘEVĚNKA</span>
-            <span class="brand-badge">WMS &bull; Sklad</span>
+            <span class="brand-text">Dřevěnka s.r.o.</span>
+            <span class="brand-badge">Skladová evidence</span>
         </a>
         <nav>
             <a th:href="@{/}">Přehled</a>
@@ -30,22 +29,21 @@
     <div class="page-header">
         <div>
             <h1 class="page-title">Katalog skladových položek</h1>
-            <p class="page-desc">Kompletní evidence produktů, cenových relací a kategorií</p>
+            <p class="page-desc">Sortiment dřevěných hraček, zařazení do kategorií a prodejní ceník</p>
         </div>
         <div>
-            <span class="badge badge-neutral" th:text="'Celkem evidováno: ' + ${#lists.size(products)} + ' položek'"></span>
+            <span class="badge badge-neutral" th:text="'Počet položek: ' + ${#lists.size(products)}"></span>
         </div>
     </div>
 
     <div class="card">
-        <!-- Filtrovací lišta -->
-        <form th:action="@{/products}" method="get" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
-            <input type="text" name="search" th:value="${searchQuery}" placeholder="Hledat podle kódu SKU nebo názvu..." class="form-control" style="flex: 2; min-width: 220px;">
+        <form th:action="@{/products}" method="get" style="display: flex; gap: 0.65rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <input type="text" name="search" th:value="${searchQuery}" placeholder="Vyhledat podle kódu nebo názvu položky..." class="form-control" style="flex: 2; min-width: 220px;">
             <select name="category" class="form-control" style="flex: 1; min-width: 180px;">
                 <option value="">Všechny kategorie</option>
                 <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id == selectedCategoryId}"></option>
             </select>
-            <button type="submit" class="btn btn-primary">Filtrovat</button>
+            <button type="submit" class="btn btn-primary">Vyhledat</button>
             <a th:href="@{/products}" class="btn btn-secondary">Zrušit filtr</a>
         </form>
 
@@ -53,13 +51,13 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Kód položky (SKU)</th>
+                        <th>Kód (SKU)</th>
                         <th>Název a popis</th>
-                        <th>Kategorie (vazba M:N)</th>
-                        <th style="text-align: right;">Nákupní cena</th>
+                        <th>Kategorie</th>
+                        <th style="text-align: right;">Výrobní náklad</th>
                         <th style="text-align: right;">Prodejní cena</th>
-                        <th style="text-align: right;">Min. limit</th>
-                        <th style="text-align: center;">Akce</th>
+                        <th style="text-align: right;">Min. zásoba</th>
+                        <th style="text-align: center;">Detail</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,7 +65,7 @@
                         <td><span class="sku-code" th:text="${p.code}">KAC-001</span></td>
                         <td>
                             <strong th:text="${p.name}">Dřevěná káča</strong>
-                            <div style="font-size: 12px; color: var(--slate-500); margin-top: 2px;" th:text="${p.description}"></div>
+                            <div style="font-size: 12px; color: var(--slate-600); margin-top: 2px;" th:text="${p.description}"></div>
                         </td>
                         <td>
                             <span th:each="cat : ${p.categories}" class="badge badge-neutral" style="margin-right: 0.25rem; margin-bottom: 0.2rem;" th:text="${cat.name}"></span>
@@ -76,7 +74,7 @@
                         <td style="text-align: right;" class="tabular-num"><strong th:text="${p.sellingPrice} + ' Kč'"></strong></td>
                         <td style="text-align: right;" class="tabular-num" th:text="${p.minStockLimit} + ' ks'"></td>
                         <td style="text-align: center;">
-                            <a th:href="@{/products/{id}(id=${p.id})}" class="btn btn-sm btn-secondary">Karta položky &rarr;</a>
+                            <a th:href="@{/products/{id}(id=${p.id})}" class="btn btn-sm btn-secondary">Karta položky</a>
                         </td>
                     </tr>
                 </tbody>
@@ -85,6 +83,13 @@
     </div>
 
 </main>
+
+<footer>
+    <div class="footer-container">
+        <span>Dřevěnka s.r.o. – Výroba a prodej dřevěných hraček</span>
+        <span>Sklady: Hradec Králové (expedice) | Třebechovice pod Orebem (sezónní sklad)</span>
+    </div>
+</footer>
 
 </body>
 </html>

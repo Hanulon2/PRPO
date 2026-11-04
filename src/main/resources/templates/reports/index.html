@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finanční reporty &amp; Marže | Dřevěnka WMS</title>
+    <title>Finanční reporty | Dřevěnka s.r.o.</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -11,9 +11,8 @@
 <header>
     <div class="header-container">
         <a th:href="@{/}" class="brand">
-            <span class="brand-logo">D</span>
-            <span class="brand-text">DŘEVĚNKA</span>
-            <span class="brand-badge">WMS &bull; Sklad</span>
+            <span class="brand-text">Dřevěnka s.r.o.</span>
+            <span class="brand-badge">Skladová evidence</span>
         </a>
         <nav>
             <a th:href="@{/}">Přehled</a>
@@ -29,19 +28,19 @@
 
     <div class="page-header">
         <div>
-            <h1 class="page-title">Rentabilita a obrat dle kategorií</h1>
-            <p class="page-desc">Finanční ukazatele z reálně vyřízených a vyexpedovaných objednávek</p>
+            <h1 class="page-title">Tržby a marže podle kategorií</h1>
+            <p class="page-desc">Souhrn tržeb a hrubé marže ze skutečně vyexpedovaných objednávek</p>
         </div>
         <div>
-            <span class="badge badge-neutral" th:text="'Sledované období: ' + ${monthName}"></span>
+            <span class="badge badge-neutral" th:text="'Období: ' + ${monthName}"></span>
         </div>
     </div>
 
     <div class="card">
         <div class="card-header">
             <div>
-                <h2 class="card-title">Měsíční přehled tržeb a hrubé marže</h2>
-                <p class="card-subtitle">Kalkulace výnosů a marží na základě zafixovaných cenových snapshotů položek</p>
+                <h2 class="card-title">Měsíční přehled prodeje</h2>
+                <p class="card-subtitle">Výpočet vychází z prodejních cen platných v době uzavření jednotlivých objednávek</p>
             </div>
         </div>
 
@@ -49,22 +48,22 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Produktová kategorie</th>
-                        <th style="text-align: right;">Prodané kusy</th>
-                        <th style="text-align: right;">Celkové tržby</th>
+                        <th>Kategorie</th>
+                        <th style="text-align: right;">Prodáno kusů</th>
+                        <th style="text-align: right;">Tržby celkem</th>
                         <th style="text-align: right;">Hrubá marže</th>
                         <th style="width: 220px; text-align: left;">Podíl na obratu</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:if="${#lists.isEmpty(report)}">
-                        <td colspan="5" style="text-align: center; color: var(--slate-500); padding: 2rem;">V aktuálním kalendářním období nebyly zatím zaevidovány žádné vyexpedované objednávky.</td>
+                        <td colspan="5" style="text-align: center; color: var(--slate-500); padding: 1.5rem;">V tomto období zatím nejsou evidovány žádné vyexpedované objednávky.</td>
                     </tr>
                     <tr th:each="r : ${report}">
                         <td><strong th:text="${r.categoryName}">Dřevěné vláčky</strong></td>
                         <td style="text-align: right;" class="tabular-num"><span th:text="${r.itemsSold} + ' ks'"></span></td>
                         <td style="text-align: right;" class="tabular-num"><strong th:text="${r.revenue} + ' Kč'"></strong></td>
-                        <td style="text-align: right; color: var(--success); font-weight: 600;" class="tabular-num" th:text="${r.margin} + ' Kč'"></td>
+                        <td style="text-align: right; color: var(--success-text); font-weight: 600;" class="tabular-num" th:text="${r.margin} + ' Kč'"></td>
                         <td>
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
                                 <div class="progress-bar" style="flex: 1;">
@@ -80,6 +79,13 @@
     </div>
 
 </main>
+
+<footer>
+    <div class="footer-container">
+        <span>Dřevěnka s.r.o. – Výroba a prodej dřevěných hraček</span>
+        <span>Sklady: Hradec Králové (expedice) | Třebechovice pod Orebem (sezónní sklad)</span>
+    </div>
+</footer>
 
 </body>
 </html>
